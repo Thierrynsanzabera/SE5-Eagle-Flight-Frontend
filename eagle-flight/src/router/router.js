@@ -6,6 +6,7 @@ import LoginView from "../views/LoginView.vue";
 import SavedResumeView from "@/views/SavedResumeView.vue";
 import MyInfoView from "@/views/MyInfoView.vue";
 import AdminView from "@/views/AdminView.vue";
+import AccountInformation from '../views/AccountInformation.vue';
 
 
 const router = createRouter({
@@ -50,6 +51,11 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
     },
+    {
+      path: '/account-information',
+      name: 'AccountInformation',
+      component: AccountInformation
+    }
   ],
 });
 
