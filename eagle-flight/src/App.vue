@@ -18,6 +18,8 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="header-title">Eagle Flight</v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn v-if="!isLogged" variant="plain" to="/login">Login</v-btn>
+      <v-btn v-else variant="plain" @click="logoutUser">Logout</v-btn>
       <div class="user-info">
         <template v-if="isLoggedIn">
           <div class="points-badge">
@@ -29,44 +31,30 @@
             <img :src="user.avatar" alt="User avatar" />
           </v-avatar>
         </template>
-        <v-btn v-else variant="plain" @click="navigate('login')">Login</v-btn>
       </div>
     </v-app-bar>
   </v-app>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      drawer: false,
-      isLoggedIn: false,
-      user: {
-        name: 'First Name',
-        points: 0,
-        badge: 'None',
-        avatar: 'https://via.placeholder.com/48'
-      }
-    };
-  },
-  methods: {
-    navigate(route) {
-      this.$router.push(`/${route}`);
-    },
-    updateUser(user) {
-      this.user = user;
-      this.isLoggedIn = true;
-    },
-    logout() {
-      this.isLoggedIn = false;
-      this.user = {
-        name: 'First Name',
-        points: 0,
-        badge: 'None',
-        avatar: 'https://via.placeholder.com/48'
-      };
-    }
-  }
+import { ref } from 'vue'
+import Utils from './config/utils'
+import userServices from './services/userServices';
+
+let isLogged = ref(Utils.isLogged())
+let user = Utils.getStore("user")
+let isAdmin = ref(false)
+if (user) {
+  userServices.getUserForId(user.userId).then((res) => {
+    isAdmin.value = res.data.isAdmin;
+    console.log(res.data)
+    console.log(isAdmin)
+  }).catch((err) => {
+    console.log(err)
+  });
+}
+let logoutUser = () => {
+  Utils.removeItem("user")
 }
 </script>
 
