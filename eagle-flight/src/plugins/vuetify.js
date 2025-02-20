@@ -13,7 +13,7 @@ import { createVuetify } from 'vuetify'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 const customTheme = {
-  dark: true,
+  dark: false,
   colors: {
     background: '#white', 
     surface: '#151516',      // CHANGE
