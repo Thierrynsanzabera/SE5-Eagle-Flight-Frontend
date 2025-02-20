@@ -2,7 +2,7 @@
     <v-container>
       <v-row justify="center" class="mt-10">
         <v-col cols="12" class="text-center">
-          <h1>Account Information</h1>
+          <h1>Empty Page</h1>
         </v-col>
       </v-row>
     </v-container>
@@ -10,7 +10,7 @@
   
   <script>
   export default {
-    name: 'Account Information Page'
+    name: 'EmptyPage'
   }
   </script>
   
