@@ -15,15 +15,15 @@ import { createVuetify } from 'vuetify'
 const customTheme = {
   dark: false,
   colors: {
-    background: '#ffffff',
-    surface: '#ffffff',
-    primary: '#800000',
-    secondary: '#ffffff',
-    text: '#000000',
-    error: '#B00020',
-    info: '#2196F3',
-    success: '#4CAF50',
-    warning: '#FB8C00'
+    background: '#white', 
+    surface: '#151516',      // CHANGE
+    primary: '#811429',      // OC RED.
+    secondary: '#222222',    // Darker and more subdued for secondary elements.
+    selected: '#424A68',     // CHANGE.
+    unselected: '#2E3348',   // CHANGE.
+    button: '#4A547A',       // CHANGE.
+    text: '#FAFAFA',         // CHANGE.
+    subtext: '#A0A0A5',      // CHANGE.    
   },
 }
 
