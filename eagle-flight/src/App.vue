@@ -8,6 +8,7 @@
           <v-list class="item">
             <v-list-item @click="navigate('')">Home</v-list-item>
             <v-list-item @click="navigate('account-information')">Account Information</v-list-item>
+            <v-list-item @click="navigate('point-shop')">Point Shop</v-list-item>
             <v-list-item @click="navigate('')">Personality Test</v-list-item>
             <v-list-item @click="navigate('')">Schedule a Meeting</v-list-item>
             <v-list-item @click="navigate('')">Resume Builder</v-list-item>

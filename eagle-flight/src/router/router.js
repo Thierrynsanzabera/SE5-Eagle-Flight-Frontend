@@ -8,11 +8,13 @@ import LoginView from "../views/LoginView.vue";
 // import MyInfoView from "@/views/MyInfoView.vue";
 // import AdminView from "@/views/AdminView.vue";
 import AccountInformation from '../views/AccountInformation.vue';
+import PointShop from '../views/PointShop.vue';
 
 const routes = [
   { path: '/', component: HomeView },
-  { path: '/account-information', component: AccountInformation },
-  { path: '/login', component: LoginView }
+  { path: '/account-information', component: AccountInformation},
+  { path: '/point-shop', component: PointShop},
+  { path: '/login', component: LoginView}
 ];
 
 const router = createRouter({
