@@ -3,15 +3,16 @@ import { createRouter, createWebHistory } from "vue-router";
 import TestPage from '../views/TestPage.vue';
 // import HomeView from "../views/HomeView.vue";
 // import BuilderView from "../views/BuilderView.vue";
-// import LoginView from "../views/LoginView.vue";
+import LoginView from "../views/LoginView.vue";
 // import SavedResumeView from "@/views/SavedResumeView.vue";
 // import MyInfoView from "@/views/MyInfoView.vue";
 // import AdminView from "@/views/AdminView.vue";
-// import AccountInformation from '../views/AccountInformation.vue';
+import AccountInformation from '../views/AccountInformation.vue';
 
 const routes = [
-  { path: '/', component: TestPage }, // Default route
-  { path: '/account-information', component: () => import('../views/AccountInformation.vue') }
+  { path: '/', component: TestPage },
+  { path: '/account-information', component: AccountInformation},
+  { path: '/login', component: LoginView}
 ];
 
 const router = createRouter({
