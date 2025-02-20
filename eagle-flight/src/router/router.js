@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import TestPage from '../views/TestPage.vue';
-// import HomeView from "../views/HomeView.vue";
+import HomeView from "../views/HomeView.vue";
 // import BuilderView from "../views/BuilderView.vue";
 import LoginView from "../views/LoginView.vue";
 // import SavedResumeView from "@/views/SavedResumeView.vue";
@@ -11,7 +11,7 @@ import AccountInformation from '../views/AccountInformation.vue';
 import PointShop from '../views/PointShop.vue';
 
 const routes = [
-  { path: '/', component: TestPage },
+  { path: '/', component: HomeView },
   { path: '/account-information', component: AccountInformation},
   { path: '/point-shop', component: PointShop},
   { path: '/login', component: LoginView}
@@ -44,7 +44,7 @@ export default router;
 //       props: true,
 //     },
 //     {
-//       path:"/build/saved/:id", 
+//       path:"/build/saved/:id",
 //       name: "saved",
 //       component: SavedResumeView,
 //       props: true,
