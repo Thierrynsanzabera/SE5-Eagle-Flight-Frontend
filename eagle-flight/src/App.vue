@@ -1,21 +1,6 @@
 <template>
   <v-app>
-      <v-layout>
-        <router-view />
-        <!-- Navigation Drawer -->
-        <v-navigation-drawer class="drawer" v-model="drawer" :location="$vuetify.display.platform.win ? 'left' : 'bottom'"
-        temporary>
-          <v-list class="item">
-            <v-list-item @click="navigate('')">Home</v-list-item>
-            <v-list-item @click="navigate('account-information')">Account Information</v-list-item>
-            <v-list-item @click="navigate('')">Personality Test</v-list-item>
-            <v-list-item @click="navigate('')">Schedule a Meeting</v-list-item>
-            <v-list-item @click="navigate('')">Resume Builder</v-list-item>
-          </v-list>
-        </v-navigation-drawer>
-      </v-layout>    
-    <!-- App Bar -->
-    <v-app-bar color="primary" dark>
+    <v-app-bar color="primary">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="header-title">Eagle Flight</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -34,47 +19,48 @@
         </template>
       </div>
     </v-app-bar>
-
+    <v-navigation-drawer v-model="drawer" :location="'left'">
+      <v-list class="item">
+        <v-list-item @click="navigate('')">Home</v-list-item>
+        <v-list-item @click="navigate('account-information')">Account Information</v-list-item>
+        <v-list-item @click="navigate('point-shop')">Point Shop</v-list-item>
+        <v-list-item @click="navigate('')">Personality Test</v-list-item>
+        <v-list-item @click="navigate('')">Schedule a Meeting</v-list-item>
+        <v-list-item @click="navigate('')">Resume Builder</v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <router-view />
   </v-app>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Utils from './config/utils'
 import userServices from './services/userServices';
 
-export default {
-  data() {
-    return {
-      drawer: false,
-    };
-  },
-  methods: {
-    navigate(route) {
-      this.$router.push(`/${route}`);
-    },
-    updateUser(user) {
-      this.user = user;
-      this.isLoggedIn = true;
-    },
-  }
-}
+const router = useRouter();
+let drawer = ref(false); // Add this to control the drawer
+let isLogged = ref(Utils.isLogged());
+let user = Utils.getStore("user");
+let isAdmin = ref(false);
 
-let isLogged = ref(Utils.isLogged())
-let user = Utils.getStore("user")
-let isAdmin = ref(false)
 if (user) {
   userServices.getUserForId(user.userId).then((res) => {
     isAdmin.value = res.data.isAdmin;
-    console.log(res.data)
-    console.log(isAdmin)
   }).catch((err) => {
-    console.log(err)
+    console.log(err);
   });
 }
+
 let logoutUser = () => {
-  Utils.removeItem("user")
-}
+  Utils.removeItem("user");
+};
+
+const navigate = (route) => {
+  drawer.value = false; // Close drawer after navigation
+  router.push(`/${route}`);
+};
 </script>
 
 <style scoped>
@@ -86,21 +72,26 @@ let logoutUser = () => {
   left: 50%;
   transform: translateX(-50%);
 }
+
 .user-info {
   display: flex;
   align-items: center;
 }
+
 .points-badge {
   margin-right: 10px;
   color: white;
 }
+
 .name-field {
   width: 100px;
   margin-right: 10px;
 }
+
 .drawer {
   padding-top: 60px;
 }
+
 .item {
   border: 5px;
 }
