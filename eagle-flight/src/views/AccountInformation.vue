@@ -9,7 +9,7 @@
         <v-row justify="center">
             <!-- Left column (Personal Information) -->
             <v-col cols="12" md="4">
-                <v-card color="transparent" class="v-card-border">
+                <v-card color="transparent" elevation="8">
                     <v-card-title class="headline">Personal Information</v-card-title>
                     <v-card-text class="card-text-box">
                         <br>
@@ -25,7 +25,7 @@
             <!-- Right column (Awards, Badges, Points) -->
             <v-col cols="12" md="4">
                 <!-- Awards -->
-                <v-card color="transparent" class="mb-4 v-card-border">
+                <v-card color="transparent" elevation="8">
                     <v-card-title class="headline">Awards</v-card-title>
                     <v-card-text class="card-text-box">
                         <br>
@@ -33,7 +33,7 @@
                     </v-card-text>
                 </v-card>
                 <!-- Badges -->
-                <v-card color="transparent" class="mb-4 v-card-border">
+                <v-card color="transparent" elevation="8">
                     <v-card-title class="headline">Badges</v-card-title>
                     <v-card-text class="card-text-box">
                         <br>
@@ -41,7 +41,7 @@
                     </v-card-text>
                 </v-card>
                 <!-- Points -->
-                <v-card color="transparent" class="v-card-border">
+                <v-card color="transparent" elevation="8">
                     <v-card-title class="headline">Points</v-card-title>
                     <v-card-text class="card-text-box">
                         <br>
