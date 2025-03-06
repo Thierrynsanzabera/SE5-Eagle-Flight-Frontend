@@ -39,27 +39,10 @@
   </v-app>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 import Utils from './config/utils'
 import userServices from './services/userServices';
-
-export default {
-  data() {
-    return {
-      drawer: false,
-    };
-  },
-  methods: {
-    navigate(route) {
-      this.$router.push(`/${route}`);
-    },
-    updateUser(user) {
-      this.user = user;
-      this.isLoggedIn = true;
-    },
-  }
-}
 
 let isLogged = ref(Utils.isLogged())
 let user = Utils.getStore("user")
@@ -76,6 +59,7 @@ if (user) {
 let logoutUser = () => {
   Utils.removeItem("user")
 }
+
 </script>
 
 <style scoped>
