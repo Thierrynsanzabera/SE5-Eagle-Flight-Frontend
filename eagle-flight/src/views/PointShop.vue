@@ -46,7 +46,7 @@
                                             <v-icon color="red" @click="deleteItem(item.id)">mdi-close</v-icon>
                                         </span>
                                     </v-card-title>
-                                    <v-card-text class="text-center">
+                                    <v-card-text class="reward-title">
                                         <p>{{ item.points }} points</p>
                                         <v-btn color="primary" @click="redeemItem(item)" :disabled="item.points > totalPoints">Redeem</v-btn>
                                     </v-card-text>
@@ -149,6 +149,7 @@ export default {
         position: relative;
     }
     .reward-title {
+        color : black;
         font-size: 1.2rem;
         font-weight: bold;
         display: flex;

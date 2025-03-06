@@ -41,25 +41,32 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Utils from './config/utils'
 import userServices from './services/userServices';
 
-let isLogged = ref(Utils.isLogged())
-let user = Utils.getStore("user")
-let isAdmin = ref(false)
+const router = useRouter();
+let drawer = ref(false); // Add this to control the drawer
+let isLogged = ref(Utils.isLogged());
+let user = Utils.getStore("user");
+let isAdmin = ref(false);
+
 if (user) {
   userServices.getUserForId(user.userId).then((res) => {
     isAdmin.value = res.data.isAdmin;
-    console.log(res.data)
-    console.log(isAdmin)
   }).catch((err) => {
-    console.log(err)
+    console.log(err);
   });
 }
-let logoutUser = () => {
-  Utils.removeItem("user")
-}
 
+let logoutUser = () => {
+  Utils.removeItem("user");
+};
+
+const navigate = (route) => {
+  drawer.value = false; // Close drawer after navigation
+  router.push(`/${route}`);
+};
 </script>
 
 <style scoped>
