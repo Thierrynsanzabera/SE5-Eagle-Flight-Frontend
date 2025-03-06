@@ -12,6 +12,9 @@ declare module 'vue' {
     AddExperience: typeof import('./src/components/builder_components/AddExperience.vue')['default']
     AddProject: typeof import('./src/components/builder_components/AddProject.vue')['default']
     AddSkill: typeof import('./src/components/builder_components/AddSkill.vue')['default']
+    CustomButton: typeof import('./src/components/fp_components/CustomButton.vue')['default']
+    FlightPlanCard: typeof import('./src/components/fp_components/FlightPlanCard.vue')['default']
+    FlightPlanSemesterCard: typeof import('./src/components/fp_components/FlightPlanSemesterCard.vue')['default']
     IconRow: typeof import('./src/components/IconRow.vue')['default']
     Resume: typeof import('./src/components/Resume.vue')['default']
     ResumePreview: typeof import('./src/components/ResumePreview.vue')['default']
@@ -19,5 +22,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SocialLogin: typeof import('./src/components/SocialLogin.vue')['default']
     TemplatePicker: typeof import('./src/components/TemplatePicker.vue')['default']
+    UstomButton: typeof import('./src/components/fp_components/ustomButton.vue')['default']
   }
 }
