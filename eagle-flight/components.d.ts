@@ -22,6 +22,5 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SocialLogin: typeof import('./src/components/SocialLogin.vue')['default']
     TemplatePicker: typeof import('./src/components/TemplatePicker.vue')['default']
-    UstomButton: typeof import('./src/components/fp_components/ustomButton.vue')['default']
   }
 }

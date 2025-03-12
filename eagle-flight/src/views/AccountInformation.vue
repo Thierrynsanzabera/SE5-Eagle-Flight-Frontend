@@ -37,7 +37,17 @@
                     <v-card-title class="headline">Badges</v-card-title>
                     <v-card-text class="card-text-box">
                         <br>
-                        <p>Badge Icons/Tasks</p>
+                        <v-row>
+                            <!-- Loop over badges -->
+                            <v-col
+                                v-for="badge in badges"
+                                :key="badge.id"
+                                cols="12"
+                                class="d-flex align-center justify-space-between"
+                            >
+                                <span>{{ badge.name }}</span>
+                            </v-col>
+                        </v-row>
                     </v-card-text>
                 </v-card>
                 <!-- Points -->
@@ -55,10 +65,22 @@
     </v-container>
 </template>
 
-<script>
-    export default {
-        name: 'AccountInformationPage',
-    }
+<script setup>
+    import { ref, onMounted } from 'vue';
+    import axios from 'axios';
+
+    const badges = ref([]);
+
+    onMounted(async () => {
+        console.log("Fetching badges...");
+        try {
+            const response = await axios.get('http://localhost:3013/badge');
+            console.log("Badges response:", response.data);
+            badges.value = response.data;
+        } catch (error) {
+            console.error('Error fetching badges:', error);
+        }
+    })
 </script>
 
 <style scoped>
