@@ -132,7 +132,7 @@ export default {
 <style scoped>
     .headline {
         background-color: #800000;
-        color: white;
+        color: rgb(255, 255, 255);
     }
     .mt-10 {
         margin-top: 10rem;
