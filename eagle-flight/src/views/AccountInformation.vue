@@ -46,6 +46,9 @@
                                 class="d-flex align-center justify-space-between"
                             >
                                 <span>{{ badge.name }}</span>
+                                <v-btn small color="primary" @click="openBadgeDialog(badge)">
+                                View
+                                </v-btn>
                             </v-col>
                         </v-row>
                     </v-card-text>
@@ -62,6 +65,18 @@
                 </v-card>
             </v-col>
         </v-row>
+
+        <!-- Badge Details Dialog -->
+        <v-dialog v-model="dialog" max-width="400">
+            <v-card>
+            <v-card-title class="headline">{{ selectedBadge.name }}</v-card-title>
+            <v-card-text>{{ selectedBadge.description }}</v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text @click="dialog = false">Close</v-btn>
+            </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -70,6 +85,8 @@
     import axios from 'axios';
 
     const badges = ref([]);
+    const dialog = ref(false);
+    const selectedBadge = ref({ name: '', description: '' });
 
     onMounted(async () => {
         console.log("Fetching badges...");
@@ -81,6 +98,10 @@
             console.error('Error fetching badges:', error);
         }
     })
+    const openBadgeDialog = (badge) => {
+        selectedBadge.value = badge;
+        dialog.value = true;
+    }
 </script>
 
 <style scoped>
