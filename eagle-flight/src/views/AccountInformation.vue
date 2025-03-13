@@ -46,7 +46,7 @@
                                 class="d-flex align-center justify-space-between"
                             >
                                 <span>{{ badge.name }}</span>
-                                <v-btn small color="primary" @click="openBadgeDialog(badge)">
+                                <v-btn color="primary" @click="openBadgeDialog(badge)">
                                 View
                                 </v-btn>
                             </v-col>
@@ -65,43 +65,16 @@
                 </v-card>
             </v-col>
         </v-row>
-
         <!-- Badge Details Dialog -->
-        <v-dialog v-model="dialog" max-width="400">
-            <v-card>
-            <v-card-title class="headline">{{ selectedBadge.name }}</v-card-title>
-            <v-card-text>{{ selectedBadge.description }}</v-card-text>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn text @click="dialog = false">Close</v-btn>
-            </v-card-actions>
-            </v-card>
-        </v-dialog>
+        <BadgeDialog v-model="dialog" :badge="selectedBadge" />
     </v-container>
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
-    import axios from 'axios';
+    import { getBadges } from '@/services/badgeServices.js';
+    import BadgeDialog from '@/components/fp_components/BadgePopUp.vue'
 
-    const badges = ref([]);
-    const dialog = ref(false);
-    const selectedBadge = ref({ name: '', description: '' });
-
-    onMounted(async () => {
-        console.log("Fetching badges...");
-        try {
-            const response = await axios.get('http://localhost:3013/badge');
-            console.log("Badges response:", response.data);
-            badges.value = response.data;
-        } catch (error) {
-            console.error('Error fetching badges:', error);
-        }
-    })
-    const openBadgeDialog = (badge) => {
-        selectedBadge.value = badge;
-        dialog.value = true;
-    }
+    const { badges, dialog, selectedBadge, openBadgeDialog } = getBadges();
 </script>
 
 <style scoped>
