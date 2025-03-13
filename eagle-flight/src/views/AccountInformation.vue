@@ -138,7 +138,7 @@
             </v-row>
             
         </v-card>
-
+</v-container>
 
 </template>
 
