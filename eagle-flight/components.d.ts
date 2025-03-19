@@ -20,7 +20,10 @@ declare module 'vue' {
     ResumePreview: typeof import('./src/components/ResumePreview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SemesterIcon: typeof import('./src/components/fp_edit_components/SemesterIcon.vue')['default']
     SocialLogin: typeof import('./src/components/SocialLogin.vue')['default']
+    TaskEditor: typeof import('./src/components/fp_edit_components/TaskEditor.vue')['default']
+    TaskList: typeof import('./src/components/fp_edit_components/TaskList.vue')['default']
     TemplatePicker: typeof import('./src/components/TemplatePicker.vue')['default']
   }
 }
