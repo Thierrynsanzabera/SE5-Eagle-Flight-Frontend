@@ -90,7 +90,7 @@ export default {
                 { id: 3, name: 'Item3', points: 20 }
             ],
             newItem: { name: '', points: null },
-            adminView: 1, // Temporary variable to store admin view status
+            adminView: 0, // Temporary variable to store admin view status
             editDialog: false,
             editItemData: { id: null, name: '', points: null }
         };
