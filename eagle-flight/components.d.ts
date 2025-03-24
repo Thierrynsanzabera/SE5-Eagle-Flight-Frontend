@@ -15,6 +15,7 @@ declare module 'vue' {
     CustomButton: typeof import('./src/components/fp_components/CustomButton.vue')['default']
     FlightPlanCard: typeof import('./src/components/fp_components/FlightPlanCard.vue')['default']
     FlightPlanSemesterCard: typeof import('./src/components/fp_components/FlightPlanSemesterCard.vue')['default']
+    FpManager: typeof import('./src/components/fp_edit_components/FpManager.vue')['default']
     IconRow: typeof import('./src/components/IconRow.vue')['default']
     Resume: typeof import('./src/components/Resume.vue')['default']
     ResumePreview: typeof import('./src/components/ResumePreview.vue')['default']
@@ -25,5 +26,6 @@ declare module 'vue' {
     TaskEditor: typeof import('./src/components/fp_edit_components/TaskEditor.vue')['default']
     TaskList: typeof import('./src/components/fp_edit_components/TaskList.vue')['default']
     TemplatePicker: typeof import('./src/components/TemplatePicker.vue')['default']
+    YearIcon: typeof import('./src/components/fp_edit_components/YearIcon.vue')['default']
   }
 }
