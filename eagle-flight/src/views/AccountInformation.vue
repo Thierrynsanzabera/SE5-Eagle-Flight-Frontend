@@ -66,15 +66,34 @@
             </v-col>
         </v-row>
         <!-- Badge Details Dialog -->
-        <BadgeDialog v-model="dialog" :badge="selectedBadge" />
+        <BadgePopUp v-model="dialog" :badge="selectedBadge" />
     </v-container>
 </template>
 
 <script setup>
-    import { getBadges } from '@/services/badgeServices.js';
-    import BadgeDialog from '@/components/fp_components/BadgePopUp.vue'
+    import { ref, onMounted } from 'vue';
+    import badgeServices from '@/services/badgeServices.js';
+    import BadgePopUp from '@/components/fp_components/BadgePopUp.vue';
 
-    const { badges, dialog, selectedBadge, openBadgeDialog } = getBadges();
+    const badges = ref([]);
+    const dialog = ref(false);
+    const selectedBadge = ref({ name: '', description: '' });
+
+    onMounted(() => {
+    badgeServices.getAllBadges()
+        .then(response => {
+        badges.value = response.data;
+        console.log("Badges fetched:", badges.value);
+        })
+        .catch(error => {
+        console.error("Error fetching badges:", error);
+        });
+    });
+
+    function openBadgeDialog(badge) {
+        selectedBadge.value = badge;
+        dialog.value = true;
+    }
 </script>
 
 <style scoped>

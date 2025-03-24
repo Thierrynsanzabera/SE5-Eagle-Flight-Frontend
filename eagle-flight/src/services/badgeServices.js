@@ -1,34 +1,22 @@
-// src/services/badgeServices.js
-import { ref, onMounted } from 'vue';
 import apiClient from "./services.js";
 
-export function getBadges() {
-  const badges = ref([]);
-  const dialog = ref(false);
-  const selectedBadge = ref({ name: '', description: '' });
-
-  const fetchBadges = async () => {
-    try {
-      const response = await apiClient.get('http://localhost:3013/badge');
-      badges.value = response.data;
-      console.log("Fetched badges:", badges.value);
-    } catch (error) {
-      console.error("Error fetching badges:", error);
-    }
-  };
-
-  onMounted(fetchBadges);
-
-  const openBadgeDialog = (badge) => {
-    selectedBadge.value = badge;
-    dialog.value = true;
-  };
-
-  return {
-    badges,
-    dialog,
-    selectedBadge,
-    openBadgeDialog,
-    fetchBadges,
-  };
+export default {
+  getAllBadges(){
+    return apiClient.get("/badge");
+  },
+  getAllForUser(userId) {
+    return apiClient.get("/badges/studentBadges/" + userId);
+  },
+  getBadge(id) {
+    return apiClient.get(`/badge/${id}`);
+  },
+  createBadge(id, data){
+    return apiClient.post(`/badge/${id}`, data);
+  },
+  updateBadge(id, data) {
+    return apiClient.put(`/badge/${id}`, data);
+  },
+  deleteBadge(id) {
+    return apiClient.delete(`/badge/${id}`);
+  }
 }
