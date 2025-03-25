@@ -12,6 +12,7 @@ declare module 'vue' {
     AddExperience: typeof import('./src/components/builder_components/AddExperience.vue')['default']
     AddProject: typeof import('./src/components/builder_components/AddProject.vue')['default']
     AddSkill: typeof import('./src/components/builder_components/AddSkill.vue')['default']
+    BadgePopUp: typeof import('./src/components/fp_components/BadgePopUp.vue')['default']
     CustomButton: typeof import('./src/components/fp_components/CustomButton.vue')['default']
     FlightPlanCard: typeof import('./src/components/fp_components/FlightPlanCard.vue')['default']
     FlightPlanSemesterCard: typeof import('./src/components/fp_components/FlightPlanSemesterCard.vue')['default']
