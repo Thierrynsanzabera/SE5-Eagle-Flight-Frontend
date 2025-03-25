@@ -1,114 +1,187 @@
 <template>
-    <v-container>
-        <!-- Header row -->
-        <v-row justify="center" class="mt-10">
-            <v-col cols="12" class="text-center">
-                <h1>Account Information</h1>
-            </v-col>
-        </v-row>
-        <v-row justify="center">
-            <!-- Left column (Personal Information) -->
-            <v-col cols="12" md="4">
-                <v-card color="transparent" class="v-card-border">
-                    <v-card-title class="headline">Personal Information</v-card-title>
-                    <v-card-text class="card-text-box">
-                        <br>
-                        <p>First Name:</p>
-                        <p>Last Name:</p>
-                        <p>Home Address:</p>
-                        <p>Phone Number:</p>
-                        <p>Other Information:</p>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-  
-            <!-- Right column (Awards, Badges, Points) -->
-            <v-col cols="12" md="4">
-                <!-- Awards -->
-                <v-card color="transparent" class="mb-4 v-card-border">
-                    <v-card-title class="headline">Awards</v-card-title>
-                    <v-card-text class="card-text-box">
-                        <br>
-                        <p>List of Awards</p>
-                    </v-card-text>
-                </v-card>
-                <!-- Badges -->
-                <v-card color="transparent" class="mb-4 v-card-border">
-                    <v-card-title class="headline">Badges</v-card-title>
-                    <v-card-text class="card-text-box">
-                        <br>
+    <v-card color="transparent" height="64px"></v-card>
+    <v-container class="d-flex justify-center">
+        <v-card width="1600px" color="background" class="px-4" elevation="10">
+            <v-row justify="center">
+                <v-avatar :image=userTest.pfp size="150" class="mt-10 mb-6"></v-avatar>
+            </v-row>
+            <v-card-title class="text-h4 text-center">Account Information for {{ userTest.fName }} {{ userTest.lName
+                }}</v-card-title>
+            <v-row>
+                <v-col>
+                    <v-card color="transparent" elevation="8" class="px-4">
+                        <v-card-title>Basic Information</v-card-title>
                         <v-row>
-                            <!-- Loop over badges -->
-                            <v-col
-                                v-for="badge in badges"
-                                :key="badge.id"
-                                cols="12"
-                                class="d-flex align-center justify-space-between"
-                            >
-                                <span>{{ badge.name }}</span>
-                                <v-btn color="primary" @click="openBadgeDialog(badge)">
-                                View
-                                </v-btn>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-text-field label="First Name" :model-value="userTest.fName"
+                                        readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-text-field label="Last Name" :model-value="userBody.lName"
+                                        readonly></v-text-field>
+                                </v-card>
                             </v-col>
                         </v-row>
-                    </v-card-text>
-                </v-card>
-                <!-- Points -->
-                <v-card color="transparent" class="v-card-border">
-                    <v-card-title class="headline">Points</v-card-title>
-                    <v-card-text class="card-text-box">
-                        <br>
-                        <p>Total:</p>
-                        <p>Lifetime:</p>
-                        <p>Used:</p>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
-        <!-- Badge Details Dialog -->
-        <BadgePopUp v-model="dialog" :badge="selectedBadge" />
-    </v-container>
+
+                        <v-row>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-text-field label="OC ID" :model-value="userBody.ocId" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-text-field label="Email" :model-value="userBody.email" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+
+                        </v-row>
+
+                    </v-card>
+                </v-col>
+                <v-col>
+                    <v-card color="transparent" elevation="8" class="px-4">
+                        <v-card-title>Area of Study</v-card-title>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-text-field label="Major" model-value="" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col cols="3">
+                                <v-card color="transparent">
+                                    <v-text-field label="Enrollment Year" :model-value="userBody.enrollmentYear" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="3">
+                                <v-card color="transparent">
+                                    <v-text-field label="Enrollment Semester" :model-value="userBody.enrollmentSemester" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="3">
+                                <v-card color="transparent">
+                                    <v-text-field label="Expected Graduation Year" :model-value="userBody.graduationYear" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="3">
+                                <v-card color="transparent">
+                                    <v-text-field label="Expected Graduation Semester" :model-value="userBody.graduationSemester" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col>
+                    <v-card color="transparent" elevation="8" class="px-4">
+                        <v-card-title>Badges</v-card-title>
+                        The list of badges will go here
+
+                    </v-card>
+                </v-col>
+                <v-col>
+                    <v-card color="transparent" elevation="8" class="px-4">
+                        <v-card-title>Clifton Strengths</v-card-title>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-text-field label="Strength" model-value="test" readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-btn color="transparent">Take the test</v-btn> </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-card color="transparent" elevation="8" class="px-4">
+                        <v-card-title> Points </v-card-title>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-text-field label="Number of points" :model-value="userBody.points"
+                                        readonly></v-text-field>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+
+                        <v-row>
+                            <v-col cols="6">
+                                <v-card color="transparent">
+                                    <v-btn color=transparent>View History</v-btn> </v-card>
+                            </v-col>
+                        </v-row>
+
+                    </v-card>
+                </v-col>
+                <v-col>
+                    <v-card color="transparent" elevation="8" class="px-4">
+                        <v-card-title>My Documents</v-card-title>
+                        TODO
+                    </v-card>
+                </v-col>
+            </v-row>
+            
+        </v-card>
+</v-container>
+
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
-    import badgeServices from '@/services/badgeServices.js';
-    import BadgePopUp from '@/components/fp_components/BadgePopUp.vue';
+import { ref } from 'vue';
+import Utils from '@/config/utils';
+import userServices from '@/services/userServices';
 
-    const badges = ref([]);
-    const dialog = ref(false);
-    const selectedBadge = ref({ name: '', description: '' });
 
-    onMounted(() => {
-    badgeServices.getAllBadges()
+let user = Utils.getStore("user");
+let userId = user.userId;
+
+
+let userBody = ref({
+    pfp: "https://media.newyorker.com/photos/5b203f425ee2c7040773fedc/4:3/w_2251,h_1688,c_limit/760209_ra523.jpg",
+});
+
+//still need: major, expected graduation, list of badges, strength, documents, points
+
+
+let userTest = {
+    fName: "David",
+    lName: "Santos",
+    pfp: "https://media.newyorker.com/photos/5b203f425ee2c7040773fedc/4:3/w_2251,h_1688,c_limit/760209_ra523.jpg",
+    ocId: "12345678",
+    points: "100",
+    email: "david@email.com"
+}
+
+loadUserInfo();
+
+
+function loadUserInfo() {
+    userServices.getUserForId(userId)
         .then(response => {
-        badges.value = response.data;
-        console.log("Badges fetched:", badges.value);
+            userBody.value = {...userBody.value, ...response.data.user, ...response.data.student};
+            console.log(userBody.value);
         })
-        .catch(error => {
-        console.error("Error fetching badges:", error);
+        .catch(e => {
+            console.log(e);
         });
-    });
+}
 
-    function openBadgeDialog(badge) {
-        selectedBadge.value = badge;
-        dialog.value = true;
-    }
 </script>
 
-<style scoped>
-    .headline {
-        background-color:#800000;
-        color: white;
-    }
-    .mt-10 {
-        margin-top: 10rem;
-    }
-    .card-text-box {
-        color: black;
-    }
-    .v-card-border {
-        border-width: 1px;
-        border-color: black;
-    }
-</style>  
+<style scoped></style>

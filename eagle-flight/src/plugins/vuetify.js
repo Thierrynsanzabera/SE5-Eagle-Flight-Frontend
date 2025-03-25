@@ -15,7 +15,7 @@ import { createVuetify } from 'vuetify'
 const customTheme = {
   dark: false,
   colors: {
-    background: '#white', 
+    background: '#FFFFFF',    // CHANGE.
     surface: '#151516',      // CHANGE
     primary: '#811429',      // OC RED.
     secondary: '#222222',    // Darker and more subdued for secondary elements.
