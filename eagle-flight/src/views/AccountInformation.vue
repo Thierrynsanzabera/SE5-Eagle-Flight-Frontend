@@ -83,8 +83,20 @@
                 <v-col>
                     <v-card color="transparent" elevation="8" class="px-4">
                         <v-card-title>Badges</v-card-title>
-                        The list of badges will go here
-
+                        <v-row>
+                            <!-- Loop over badges -->
+                            <v-col
+                                v-for="badge in badges"
+                                :key="badge.id"
+                                cols="12"
+                                class="d-flex align-center justify-space-between"
+                            >
+                                <span>{{ badge.name }}</span>
+                                <v-btn color="primary" @click="openBadgeDialog(badge)">
+                                View
+                                </v-btn>
+                            </v-col>
+                        </v-row>
                     </v-card>
                 </v-col>
                 <v-col>
@@ -136,21 +148,42 @@
                     </v-card>
                 </v-col>
             </v-row>
-            
         </v-card>
+        <!-- Badge Details Dialog -->
+        <BadgePopUp v-model="dialog" :badge="selectedBadge" />
 </v-container>
 
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 import Utils from '@/config/utils';
 import userServices from '@/services/userServices';
+import badgeServices from '@/services/badgeServices.js';
+import BadgePopUp from '@/components/fp_components/BadgePopUp.vue';
 
 
 let user = Utils.getStore("user");
 let userId = user.userId;
+const badges = ref([]);
+const dialog = ref(false);
+const selectedBadge = ref({ name: '', description: '' });
 
+onMounted(() => {
+    badgeServices.getAllBadges()
+        .then(response => {
+        badges.value = response.data;
+        console.log("Badges fetched:", badges.value);
+        })
+        .catch(error => {
+        console.error("Error fetching badges:", error);
+        });
+    });
+
+function openBadgeDialog(badge) {
+    selectedBadge.value = badge;
+    dialog.value = true;
+}
 
 let userBody = ref({
     pfp: "https://media.newyorker.com/photos/5b203f425ee2c7040773fedc/4:3/w_2251,h_1688,c_limit/760209_ra523.jpg",
