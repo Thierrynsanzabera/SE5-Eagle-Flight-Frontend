@@ -38,6 +38,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Utils from './config/utils'
 import userServices from './services/userServices';
+import authServices from './services/authServices';
 
 const router = useRouter();
 let drawer = ref(false); // Add this to control the drawer
@@ -55,6 +56,14 @@ if (user) {
 
 let logoutUser = () => {
   Utils.removeItem("user");
+  authServices.logoutUser(user.token);
+  router.push('/login');
+  //window.location.reload();
+  isLogged.value = false;
+  drawer.value = false;
+  user.value = null;
+  isAdmin.value = false;
+  
 };
 
 const navigate = (route) => {
