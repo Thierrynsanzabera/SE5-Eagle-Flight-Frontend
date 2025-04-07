@@ -9,16 +9,18 @@ import LoginView from "../views/LoginView.vue";
 // import AdminView from "@/views/AdminView.vue";
 import AccountInformation from '../views/AccountInformation.vue';
 import PointShop from '../views/PointShop.vue';
-import EditPlan from '../views/EditPlan.vue';
 import StudentSetup from "@/views/StudentSetup.vue";
+import EditPlanView from '../views/EditPlanView.vue';
+
 
 const routes = [
   { path: '/', component: HomeView },
   { path: '/account-information', component: AccountInformation},
   { path: '/point-shop', component: PointShop},
   { path: '/login', component: LoginView},
-  { path: '/edit-plan', component: EditPlan},
   { path: '/student-setup', component:StudentSetup}
+  { path: '/edit-plan', component: EditPlanView},
+  { path: '/test', component: TestPage}
 ];
 
 const router = createRouter({
