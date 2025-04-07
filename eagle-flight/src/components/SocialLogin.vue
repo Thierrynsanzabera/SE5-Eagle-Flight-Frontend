@@ -21,10 +21,9 @@ const loginWithGoogle = () => {
   });
   window.google.accounts.id.renderButton(document.getElementById("parent_id"), {
     type: "standard",
-    theme: "outline",
     size: "large",
     text: "signup_with",
-    width: 400,
+    width: 360,
   });
 };
 
@@ -51,9 +50,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="signup-buttons">
+  <div style="color: black;">
     <v-row justify="center">
-      <div display="flex" id="parent_id"></div>
+      <div id="parent_id"></div>
     </v-row>
   </div>
 </template>
