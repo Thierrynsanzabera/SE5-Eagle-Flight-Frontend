@@ -14,13 +14,13 @@ import EditPlanView from '../views/EditPlanView.vue';
 
 
 const routes = [
-  { path: '/', component: HomeView },
-  { path: '/account-information', component: AccountInformation},
-  { path: '/point-shop', component: PointShop},
-  { path: '/login', component: LoginView},
-  { path: '/student-setup', component:StudentSetup},
-  { path: '/edit-plan', component: EditPlanView},
-  { path: '/test', component: TestPage}
+  { path: '/', alias: "/home", name: "home", component: HomeView },
+  { path: '/account-information', component: AccountInformation },
+  { path: '/point-shop', component: PointShop },
+  { path: '/login', component: LoginView },
+  { path: '/student-setup', name:"studentSetup", component: StudentSetup },
+  { path: '/edit-plan', component: EditPlanView },
+  { path: '/test', component: TestPage }
 ];
 
 const router = createRouter({
