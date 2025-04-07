@@ -18,7 +18,7 @@ const routes = [
   { path: '/account-information', component: AccountInformation},
   { path: '/point-shop', component: PointShop},
   { path: '/login', component: LoginView},
-  { path: '/student-setup', component:StudentSetup}
+  { path: '/student-setup', component:StudentSetup},
   { path: '/edit-plan', component: EditPlanView},
   { path: '/test', component: TestPage}
 ];
