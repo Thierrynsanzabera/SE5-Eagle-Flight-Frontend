@@ -3,10 +3,9 @@ import { ref, onMounted } from "vue";
 import AuthServices from "../services/authServices";
 import Utils from "../config/utils.js";
 import { useRouter } from "vue-router";
+import studentServices from "../services/eagle-flight/studentServices.js";
 
 const router = useRouter();
-const fName = ref("");
-const lName = ref("");
 const user = ref({});
 
 const loginWithGoogle = () => {
@@ -21,10 +20,9 @@ const loginWithGoogle = () => {
   });
   window.google.accounts.id.renderButton(document.getElementById("parent_id"), {
     type: "standard",
-    theme: "outline",
     size: "large",
     text: "signup_with",
-    width: 400,
+    width: 360,
   });
 };
 
@@ -36,9 +34,14 @@ const handleCredentialResponse = async (response) => {
     .then((response) => {
       user.value = response.data;
       Utils.setStore("user", user.value);
-      fName.value = user.value.fName;
-      lName.value = user.value.lName;
-      router.push({ name: "home" });
+      let userId = user.value.userId;
+      console.log("userId", userId);
+      studentServices.checkIfStudentExists(userId).then((response) => {
+        if (response == true)
+          router.push({ name: "home" });
+        else
+          router.push({ name: "studentSetup" });
+      });
     })
     .catch((error) => {
       console.log("error", error);
@@ -51,9 +54,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="signup-buttons">
+  <div style="color: black;">
     <v-row justify="center">
-      <div display="flex" id="parent_id"></div>
+      <div id="parent_id"></div>
     </v-row>
   </div>
 </template>
