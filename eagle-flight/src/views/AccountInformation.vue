@@ -5,7 +5,7 @@
             <v-row justify="center">
                 <v-avatar :image=userTest.pfp size="150" class="mt-10 mb-6"></v-avatar>
             </v-row>
-            <v-card-title class="text-h4 text-center">Account Information for {{ userTest.fName }} {{ userTest.lName
+            <v-card-title class="text-h4 text-center">Account Information for {{ userBody.fName }} {{ userBody.lName
                 }}</v-card-title>
             <v-row>
                 <v-col>
@@ -14,7 +14,7 @@
                         <v-row>
                             <v-col cols="6">
                                 <v-card color="transparent">
-                                    <v-text-field label="First Name" :model-value="userTest.fName"
+                                    <v-text-field label="First Name" :model-value="userBody.fName"
                                         readonly></v-text-field>
                                 </v-card>
                             </v-col>
@@ -48,7 +48,7 @@
                         <v-row>
                             <v-col cols="6">
                                 <v-card color="transparent">
-                                    <v-text-field label="Major" model-value="" readonly></v-text-field>
+                                    <v-text-field label="Major" :model-value="userBody.majorId" readonly></v-text-field>
                                 </v-card>
                             </v-col>
                         </v-row>

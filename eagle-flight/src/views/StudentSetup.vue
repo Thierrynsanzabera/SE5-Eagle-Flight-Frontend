@@ -119,6 +119,7 @@ let studentBody = ref({
     lName: "",
     ocId: "",
     majorId: "",
+    points : "",
     enrollmentYear: "",
     enrollmentSemester: "",
     graduationYear: "",
