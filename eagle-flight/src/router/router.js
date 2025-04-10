@@ -11,6 +11,7 @@ import AccountInformation from '../views/AccountInformation.vue';
 import PointShop from '../views/PointShop.vue';
 import StudentSetup from "@/views/StudentSetup.vue";
 import EditPlanView from '../views/EditPlanView.vue';
+import EventsPage from '../views/Events.vue'
 
 
 const routes = [
@@ -21,7 +22,7 @@ const routes = [
   { path: '/student-setup', name:"studentSetup", component: StudentSetup },
   { path: '/edit-plan', component: EditPlanView },
   { path: '/test', component: TestPage },
-
+  { path: '/events', component: EventsPage },
 ];
 
 const router = createRouter({
