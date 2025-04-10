@@ -1,171 +1,349 @@
 <template>
-    <v-container>
-        <!-- Header row -->
-        <v-row justify="center" class="mt-10">
-            <v-col cols="12" class="text-center">
-                <h1>Point Shop</h1>
-            </v-col>
-        </v-row>
+  <v-container>
+    <!-- Header -->
+    <v-row justify="center" class="mt-10">
+      <v-col cols="12" class="text-center">
+        <h1>Point Shop</h1>
+      </v-col>
+    </v-row>
 
-        <!-- Total Points Box -->
-        <v-row justify="center">
-            <v-col cols="12" md="6">
-                <v-card>
-                    <v-card-title class="headline text-center">My Points : {{ totalPoints }}</v-card-title>
+    <!-- Total Points -->
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-card-title class="headline text-center">
+            My Points: {{ totalPoints }}
+          </v-card-title>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Available Items -->
+    <v-row justify="center">
+      <v-col cols="12" md="8">
+        <v-card>
+          <v-card-title class="headline text-center">
+            Available Rewards
+          </v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col v-for="item in pointShopItems" :key="item.id" cols="12" md="4">
+                <v-card class="reward-item">
+                  <v-card-title class="reward-title">{{ item.name }}</v-card-title>
+                  <v-card-text>
+                    <p class="points-text">{{ item.points }} points</p>
+                    <!-- Conditionally hide the Redeem button when adminView is true -->
+                    <v-btn v-if="!adminView" color="primary" @click="redeemItem(item)" :disabled="item.points > totalPoints">
+                      Redeem
+                    </v-btn>
+
+                    <!-- Admin Action Buttons (Edit/Delete) -->
+                    <v-btn v-if="adminView" color="orange" @click="openEditDialog(item)">Edit</v-btn>
+                    <v-btn v-if="adminView" color="red" @click="deleteItem(item.id)">Delete</v-btn>
+                  </v-card-text>
                 </v-card>
-            </v-col>
-        </v-row>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
 
-        <!-- Add Item Form (Visible only for Admin) -->
-        <v-row justify="center" v-if="adminView === 1">
-            <v-col cols="12" md="6">
-                <v-card>
-                    <v-card-title class="headline">Add New Item</v-card-title>
-                    <v-card-text class="card-text-box">
-                        <v-text-field v-model="newItem.name" label="Item Name"></v-text-field>
-                        <v-text-field v-model.number="newItem.points" label="Points Required"
-                            type="number"></v-text-field>
-                        <v-btn color="success" @click="addItem">+ Add Item</v-btn>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
+    <!-- Redemption History Button (Visible for Admin and Students) -->
+    <v-row justify="center" class="mt-4">
+      <v-col cols="12" md="8">
+        <v-btn color="secondary" @click="openHistoryDialog">
+          View Redemption History
+        </v-btn>
+      </v-col>
+    </v-row>
 
-        <!-- Point Shop Items -->
-        <v-row justify="center">
-            <v-col cols="12" md="8">
-                <v-card>
-                    <v-card-title class="headline text-center">Available Rewards</v-card-title>
-                    <v-card-text class="card-text-box">
-                        <v-row>
-                            <v-col v-for="item in pointShopItems" :key="item.id" cols="12" md="4">
-                                <v-card class="reward-item">
-                                    <v-card-title class="reward-title">
-                                        {{ item.name }}
-                                        <span class="admin-icons" v-if="adminView === 1">
-                                            <v-icon color="warning" @click="openEditDialog(item)">mdi-pencil</v-icon>
-                                            <v-icon color="red" @click="deleteItem(item.id)">mdi-close</v-icon>
-                                        </span>
-                                    </v-card-title>
-                                    <v-card-text class="reward-title">
-                                        <p>{{ item.points }} points</p>
-                                        <v-btn color="primary" @click="redeemItem(item)"
-                                            :disabled="item.points > totalPoints">Redeem</v-btn>
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                </v-card>
-            </v-col>
-        </v-row>
+    <!-- Admin Section - Only visible if adminView is true -->
+    <v-row justify="center" class="mt-4" v-if="adminView">
+      <v-col cols="12" md="8">
+        <v-card>
+          <v-card-title class="headline text-center">
+            Admin Actions
+          </v-card-title>
+          <v-card-text>
+            <v-btn color="primary" @click="openCreateRedeemableDialog">Create Redeemable Item</v-btn>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
 
-        <!-- Edit Item Dialog -->
-        <v-dialog v-model="editDialog" max-width="500px">
-            <v-card>
-                <v-card-title class="headline">Edit Item</v-card-title>
+    <!-- Edit Redeemable Item Dialog (Admin only) -->
+    <v-dialog v-model="editRedeemableDialog" max-width="600">
+      <v-card>
+        <v-card-title class="headline">Edit Redeemable Item</v-card-title>
+        <v-card-text>
+          <v-form v-model="formValid">
+            <v-text-field v-model="editedRedeemable.name" label="Item Name" required></v-text-field>
+            <v-text-field v-model="editedRedeemable.points" label="Points Required" type="number" required></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="closeEditDialog">Cancel</v-btn>
+          <v-btn color="primary" :disabled="!formValid" @click="updateRedeemableItem">Update</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Create Redeemable Item Dialog (Admin only) -->
+    <v-dialog v-model="createRedeemableDialog" max-width="600">
+      <v-card>
+        <v-card-title class="headline">Create Redeemable Item</v-card-title>
+        <v-card-text>
+          <v-form v-model="formValid">
+            <v-text-field v-model="newRedeemable.name" label="Item Name" required></v-text-field>
+            <v-text-field v-model="newRedeemable.points" label="Points Required" type="number" required></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="closeCreateRedeemableDialog">Cancel</v-btn>
+          <v-btn color="primary" :disabled="!formValid" @click="createRedeemableItem">Create</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- Redemption History Dialog -->
+    <v-dialog v-model="historyDialog" max-width="800">
+      <v-card>
+        <v-card-title class="headline text-center">Redemption History</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col v-for="(entry, index) in redemptionHistory" :key="index" cols="12" md="6">
+              <v-card class="reward-item">
+                <v-card-title>{{ entry.redeemableName }}</v-card-title>
                 <v-card-text>
-                    <v-text-field v-model="editItemData.name" label="Item Name"></v-text-field>
-                    <v-text-field v-model.number="editItemData.points" label="Points Required"
-                        type="number"></v-text-field>
+                  <p>{{ entry.redeemablePoints }} points</p>
+                  <p>Redeemed on: {{ formatDate(entry.redeemDate) }}</p>
                 </v-card-text>
-                <v-card-actions>
-                    <v-btn color="green" @click="saveEdit">Save</v-btn>
-                    <v-btn color="red" @click="editDialog = false">Cancel</v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-    </v-container>
+              </v-card>
+            </v-col>
+          </v-row>
+          <div v-if="!redemptionHistory.length">No redemption history available.</div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="closeHistoryDialog">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
-<script>
-export default {
-    name: 'PointShop',
-    data() {
-        return {
-            totalPoints: 100, // Example value, replace with dynamic data
-            pointShopItems: [
-                { id: 1, name: 'Item1', points: 50 },
-                { id: 2, name: 'Item2', points: 30 },
-                { id: 3, name: 'Item3', points: 20 }
-            ],
-            newItem: { name: '', points: null },
-            adminView: 1, // Temporary variable to store admin view status
-            editDialog: false,
-            editItemData: { id: null, name: '', points: null }
-        };
-    },
-    methods: {
-        redeemItem(item) {
-            if (this.totalPoints >= item.points) {
-                this.totalPoints -= item.points;
-                alert(`You redeemed ${item.name} for ${item.points} points!`);
-            }
-        },
-        addItem() {
-            if (this.newItem.name && this.newItem.points) {
-                this.pointShopItems.push({
-                    id: this.pointShopItems.length + 1,
-                    name: this.newItem.name,
-                    points: this.newItem.points
-                });
-                this.newItem.name = '';
-                this.newItem.points = null;
-            }
-        },
-        openEditDialog(item) {
-            this.editItemData = { ...item };
-            this.editDialog = true;
-        },
-        saveEdit() {
-            let item = this.pointShopItems.find(i => i.id === this.editItemData.id);
-            if (item) {
-                item.name = this.editItemData.name;
-                item.points = this.editItemData.points;
-            }
-            this.editDialog = false;
-        },
-        deleteItem(itemId) {
-            this.pointShopItems = this.pointShopItems.filter(item => item.id !== itemId);
-        }
-    }
-};
+<script setup>
+import { ref, onMounted } from 'vue';
+import Utils from '@/config/utils';
+import redeemableServices from '@/services/eagle-flight/redeemableServices';
+import studentServices from '@/services/eagle-flight/studentServices';
+import studentRedeemableServices from '@/services/eagle-flight/studentRedeemableServices';
+
+let user = Utils.getStore("user");
+let userId = user.userId;
+
+let pointShopItems = ref([]);  // List of available items for redemption
+let totalPoints = ref(0);      // Student's current total points
+let redemptionHistory = ref([]); // Redemption history for the student
+let historyDialog = ref(false); // Controls the visibility of the history dialog
+
+// Admin-specific dialog and form data
+let adminView = ref(false);  // Manually set adminView to true (admin mode) or false (student mode)
+let createRedeemableDialog = ref(false);
+let newRedeemable = ref({
+  name: '',
+  points: 0,
+});
+
+let editRedeemableDialog = ref(false);
+let editedRedeemable = ref({
+  id: null,
+  name: '',
+  points: 0,
+});
+
+let formValid = ref(false);
+
+// Load current student points from the backend
+function loadStudentPoints() {
+  studentServices.getForUserId(userId)
+    .then(response => {
+      totalPoints.value = response.data.points;
+    })
+    .catch(error => {
+      console.error("Error fetching points:", error);
+    });
+}
+
+function loadItems() {
+  redeemableServices.getAll()
+    .then(response => {
+      pointShopItems.value = response.data;
+    })
+    .catch(error => {
+      console.error("Error fetching items:", error);
+    });
+}
+
+// Redeem an item if the user has enough points
+function redeemItem(item) {
+  if (totalPoints.value >= item.points) {
+    const redeemData = {
+      studentUserId: userId,
+      redeemableId: item.id,
+    };
+
+    studentRedeemableServices.create(redeemData)
+      .then(() => {
+        totalPoints.value -= item.points;  // Subtract redeemed points
+        alert(`You redeemed ${item.name} for ${item.points} points!`);
+      })
+      .catch(error => {
+        console.error("Error redeeming item:", error);
+      });
+  } else {
+    alert('Not enough points to redeem this item.');
+  }
+}
+
+// Fetch redemption history
+function loadRedemptions() {
+  studentRedeemableServices.getByStudent(userId)
+    .then(response => {
+      const redemptionData = response.data;
+      redemptionHistory.value = [];
+
+      redemptionData.forEach(entry => {
+        redeemableServices.getOne(entry.redeemableId)
+          .then(redeemableResponse => {
+            const redeemableDetails = redeemableResponse.data;
+            // Add redeemable item details to each redemption entry
+            entry.redeemableName = redeemableDetails.name;
+            entry.redeemablePoints = redeemableDetails.points;
+            entry.redeemDate = entry.redeemDate;
+            redemptionHistory.value.push(entry); // Add the entry to the history
+          })
+          .catch(error => {
+            console.error("Error fetching redeemable details:", error);
+          });
+      });
+    })
+    .catch(error => {
+      console.error("Error fetching redemption history:", error);
+    });
+}
+
+function openHistoryDialog() {
+  loadRedemptions();
+  historyDialog.value = true;
+}
+
+// Close the redemption history dialog
+function closeHistoryDialog() {
+  historyDialog.value = false;
+}
+
+// Open the dialog to create a new redeemable item
+function openCreateRedeemableDialog() {
+  createRedeemableDialog.value = true;
+}
+
+// Close the dialog for creating a new redeemable item
+function closeCreateRedeemableDialog() {
+  createRedeemableDialog.value = false;
+  newRedeemable.value = { name: '', points: 0 };  // Reset the form
+}
+
+// Open the dialog to edit a redeemable item
+function openEditDialog(item) {
+  editedRedeemable.value = { ...item };
+  editRedeemableDialog.value = true;
+}
+
+// Close the edit dialog
+function closeEditDialog() {
+  editRedeemableDialog.value = false;
+}
+
+// Update an existing redeemable item (admin only)
+function updateRedeemableItem() {
+  redeemableServices.update(editedRedeemable.value.id, editedRedeemable.value)
+    .then(() => {
+      alert('Redeemable item updated successfully!');
+      editRedeemableDialog.value = false;
+      loadItems();  // Reload the available items
+    })
+    .catch(error => {
+      console.error("Error updating redeemable item:", error);
+    });
+}
+
+// Delete a redeemable item (admin only)
+function deleteItem(itemId) {
+  redeemableServices.delete(itemId)
+    .then(() => {
+      alert('Redeemable item deleted successfully!');
+      loadItems();  // Reload the available items
+    })
+    .catch(error => {
+      console.error("Error deleting redeemable item:", error);
+    });
+}
+
+// Create a new redeemable item (admin only)
+function createRedeemableItem() {
+  if (newRedeemable.value.name && newRedeemable.value.points > 0) {
+    redeemableServices.create(newRedeemable.value)
+      .then(() => {
+        alert('Redeemable item created successfully!');
+        createRedeemableDialog.value = false;  // Close the dialog
+        newRedeemable.value = { name: '', points: 0 };  // Reset the form
+        loadItems();  // Reload the available items
+      })
+      .catch((error) => {
+        console.error("Error creating redeemable item:", error);
+      });
+  } else {
+    alert('Please fill in all fields correctly.');
+  }
+}
+
+// Fetch the data when the component is mounted
+onMounted(() => {
+  loadItems();  // Load the available rewards
+  loadStudentPoints();  // Load the student's total points
+});
 </script>
 
 <style scoped>
-.headline {
-    background-color: #800000;
-    color: white;
-}
-
 .mt-10 {
-    margin-top: 10rem;
+  margin-top: 5rem;
 }
 
-.card-text-box {
-    background-color: lightgrey;
-    padding: 1rem;
+.headline {
+  background-color: #800000;
+  color: white;
+  font-weight: bold;
 }
 
 .reward-item {
-    background-color: #f5f5f5;
-    padding: 1rem;
-    text-align: center;
-    border-radius: 10px;
-    position: relative;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
 }
 
 .reward-title {
-    color: black;
-    font-size: 1.2rem;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #333;
 }
 
-.admin-icons {
-    display: flex;
-    gap: 5px;
+.points-text {
+  color: black;  /* Change the color to black for the points text */
 }
+
 </style>
