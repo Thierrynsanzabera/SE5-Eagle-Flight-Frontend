@@ -13,11 +13,9 @@
 <script setup>
 import { ref } from "vue";
 import { useEditEventStore } from "@/store/editEventStore";
-import DatetimePicker from 'vuetify-datetime-picker'
 
 const editEventStore = useEditEventStore();
 const selectedEvent = ref(null);
-Vue.use(DatetimePicker)
 
 function passToEdit(event) {
     selectedEvent.value = event;

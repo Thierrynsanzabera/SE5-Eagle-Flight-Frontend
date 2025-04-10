@@ -1,7 +1,7 @@
 <template>
-    <v-card color="primary" width="500px" height="300px">
+    <v-card color="primary" width="500px" height="500px">
         <v-card-title class="text-center pb-0">All Events</v-card-title>
-        <v-card color="transparent" width="100%" height="85%" class="d-flex justify-center align-center">
+        <v-card color="transparent" width="100%" height="92%" class="d-flex justify-center align-center">
             <v-list bg-color="transparent" width=96% max-height=96%>
                 <v-card v-for="event in events" :key="event.id" class="d-flex align-center mb-3"
                     :color="selectedEvent == event ? 'primary' : 'background'" height="40px" link

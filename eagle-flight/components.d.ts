@@ -14,6 +14,7 @@ declare module 'vue' {
     AddSkill: typeof import('./src/components/builder_components/AddSkill.vue')['default']
     BadgePopUp: typeof import('./src/components/fp_components/BadgePopUp.vue')['default']
     CustomButton: typeof import('./src/components/fp_components/CustomButton.vue')['default']
+    DateTimePicker: typeof import('./src/components/fp_edit_components/DateTimePicker.vue')['default']
     EventEditor: typeof import('./src/components/fp_edit_components/EventEditor.vue')['default']
     EventList: typeof import('./src/components/fp_edit_components/EventList.vue')['default']
     ExpandedCombo: typeof import('./src/components/fp_edit_components/ExpandedCombo.vue')['default']

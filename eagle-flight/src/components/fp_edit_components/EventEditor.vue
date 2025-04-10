@@ -1,7 +1,7 @@
 <template>
-    <v-card color="primary" width="500px" height="300px">
+    <v-card color="primary" width="500px" height="500px">
         <v-card-title class="text-center pb-0">{{currentAction}} Event</v-card-title>
-        <v-card color="transparent" class="d-flex align-center justify-center" width="100%" height="66%" variant="flat">
+        <v-card color="transparent" class="d-flex align-center justify-center" width="100%" height="75%" variant="flat">
             <v-list bg-color="transparent" width=96% max-height=100%>
                 <v-container width="96%">
                     <v-row>
@@ -17,7 +17,7 @@
                             <v-text-field v-model="event.location" label="Location" variant="outlined" density="compact"></v-text-field>
                         </v-col>
                         <v-col cols=6>
-                            <v-datetime-picker label="Select Datetime" v-model="datetime"> </v-datetime-picker>
+                            <v-calendar v-model="event.dateTime"></v-calendar>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -25,7 +25,7 @@
                             <v-text-field v-model="event.name" label="Name" variant="outlined" density="compact"></v-text-field>
                         </v-col>
                         <v-col cols=3>
-                            <v-text-field v-model="event.points" label="Points" variant="outlined" density="compact"></v-text-field>
+                            <v-text-field v-model="event.type" label="Type" variant="outlined" density="compact"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-textarea v-model="event.description" label="Description" variant="outlined" density="compact" auto-grow="true"
