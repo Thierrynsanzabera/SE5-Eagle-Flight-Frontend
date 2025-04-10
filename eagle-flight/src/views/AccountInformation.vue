@@ -48,7 +48,7 @@
                         <v-row>
                             <v-col cols="6">
                                 <v-card color="transparent">
-                                    <v-text-field label="Major" :model-value="userBody.majorId" readonly></v-text-field>
+                                    <v-text-field label="Major" :model-value="userBody.getMajor" readonly></v-text-field>
                                 </v-card>
                             </v-col>
                         </v-row>
