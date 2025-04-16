@@ -17,7 +17,7 @@
                             <v-text-field v-model="event.location" label="Location" variant="outlined" density="compact"></v-text-field>
                         </v-col>
                         <v-col cols=6>
-                            <v-calendar v-model="event.dateTime"></v-calendar>
+                            <v-date-input v-model="event.date" label="MM/DD/YYYY" max-width="368"></v-date-input>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -50,7 +50,7 @@ let event = ref({
     id:"",
     experienceID: "",
     location:"",
-    dateTime:"",
+    date:"",
     name: "",
     type:"",
     description: ""
@@ -64,7 +64,7 @@ watch(newEvent, () => {
         id:"",
         experienceID: "",
         location:"",
-        dateTime:"",
+        date:"",
         name: "",
         type:"",
         description: ""
@@ -81,7 +81,7 @@ function cancelAction(){
         id:"",
         experienceID: "",
         location:"",
-        dateTime:"",
+        date:"",
         name: "",
         type:"",
         description: ""
@@ -100,7 +100,7 @@ function addEvent (){
 }
 
 function updateEvent (){
-    eventServices.update(event.value.id, event.value).then(
+    eventServices.updateEvent(event.value.id, event.value).then(
         cancelAction()
     )
 }
