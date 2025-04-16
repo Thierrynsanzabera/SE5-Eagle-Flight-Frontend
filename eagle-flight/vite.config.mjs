@@ -48,6 +48,7 @@ export default defineConfig({
       '.vue',
     ],
   },
+  base: '/2025/flight-plan/t3',
   server: {
     port: 3000,
   },
