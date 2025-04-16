@@ -2,7 +2,7 @@
   "name": "resume-builder",
   "version": "0.0.0",
   "scripts": {
-    "build": "cross-env APP_ENV= PRODUCTIONvite build",
+    "build": "cross-env APP_ENV=production vite build",
     "lint": "eslint . --fix --ignore-path .gitignore",
     "dev": "cross-env APP_ENV=development vite",
     "preview": "vite preview",
