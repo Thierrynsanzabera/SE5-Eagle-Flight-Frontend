@@ -27,7 +27,7 @@ jobs:
           echo VITE_APP_API_URL="$VITE_APP_API_URL" >> .env
           echo VITE_APP_CLIENT_URL=flightplan.eaglesoftwareteam.com >> .env
           echo VITE_APP_SITE_URL=flightplan.eaglesoftwareteam.com >> .env
-
+      - run: cd eagle-flight
       - run: npm install
       - run: npm run build
       - run: npm run bundle
