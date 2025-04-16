@@ -1,15 +1,25 @@
 <template>
     <v-card color="background" width="800px" height="400px" elevation=2>
-        <v-card-title class="d-flex justify-center align-center" style="width: 100%;font-size:140%">
+        <v-card-title class="d-flex justify-center align-center py-0 mt-1" style="width: 100%;font-size:140%;">
             {{ title }}
         </v-card-title>
-        <v-container class="d-flex justify-center align-center px-2" height="84%" width="98%">
-            <v-list bg-color="secondary" class="my-list px-1" style="overflow-y: auto;" width=98% max-height=98%>
+        <v-tabs v-model="selectedCategory" bg-color="background" class="mb-0" height="35px">
+            <v-tab value="tasks">Tasks</v-tab>
+            <v-tab value="experiences">Experiences</v-tab>
+        </v-tabs>
+        <v-container class="d-flex justify-center align-center px-0 pt-0 mx-0" height="85%" width="100%">
+            <v-list bg-color="secondary" class="my-list px-1" style="overflow-y: auto;" width=100% height=98%
+                rounded-sm>
                 <v-card v-for="task in filteredTasks" class="mb-3 clickable-card" color="background" elevation="4" hover
                     ripple @click="setCurrentTask(task)">
-                    <v-card-title class="d-flex justify-space-between align-center text-overline">
+                    <v-card-title v-if="!task.completionDate"
+                        class="d-flex justify-space-between align-center text-overline">
                         <span>{{ task.task.name }} ({{ task.task.points }} pts)</span>
-                        <v-btn color="primary" size="small">Complete</v-btn>
+                        <v-btn color="primary" size="small" variant="text">Complete</v-btn>
+                    </v-card-title>
+                    <v-card-title v-else class="d-flex justify-space-between align-center text-overline">
+                        <span>{{ task.task.name }} ({{ task.task.points }} pts)</span>
+                        <v-btn color="secondary" size="small" variant="text">Waiting for Admin</v-btn>
                     </v-card-title>
                 </v-card>
             </v-list>
@@ -18,9 +28,11 @@
 
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import instanceTaskServices from '@/services/eagle-flight/instanceTask.services'
 import { useFpInstanceStore } from '@/store/instanceFpStore'
+
+const selectedCategory = ref('tasks')
 
 const fpInstanceStore = useFpInstanceStore()
 const title = computed(() => {
@@ -47,9 +59,16 @@ const totalTasks = ref([]);
 getInstanceTasks()
 
 const filteredTasks = computed(() => {
-    return totalTasks.value.filter(
-        task => task.semesterUntilGraduation === currentSemesterUntilGraduation.value
-    )
+    return totalTasks.value.filter(task => {
+        const matchesSemester = task.semesterUntilGraduation === currentSemesterUntilGraduation.value;
+
+        const isExperience = task.task.isExperience;
+        if (selectedCategory.value === 'experiences') {
+            return matchesSemester && isExperience === true;
+        } else {
+            return matchesSemester && isExperience === false;
+        }
+    });
 });
 
 
