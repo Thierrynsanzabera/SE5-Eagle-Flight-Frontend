@@ -35,6 +35,7 @@ declare module 'vue' {
     TaskEditor: typeof import('./src/components/fp_edit_components/TaskEditor.vue')['default']
     TaskList: typeof import('./src/components/fp_edit_components/TaskList.vue')['default']
     TemplatePicker: typeof import('./src/components/TemplatePicker.vue')['default']
+    TimeSelector: typeof import('./src/components/fp_edit_components/TimeSelector.vue')['default']
     YearIcon: typeof import('./src/components/fp_edit_components/YearIcon.vue')['default']
   }
 }

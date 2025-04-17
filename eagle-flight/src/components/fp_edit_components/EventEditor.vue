@@ -1,9 +1,9 @@
 <template>
     <v-card color="primary" width="500px" height="500px">
         <v-card-title class="text-center pb-0">{{currentAction}} Event</v-card-title>
-        <v-card color="transparent" class="d-flex align-center justify-center" width="100%" height="75%" variant="flat">
+        <v-card color="transparent" class="d-flex align-center justify-center" width="100%" height="80%" variant="flat">
             <v-list bg-color="transparent" width=96% max-height=100%>
-                <v-container width="96%">
+                <v-container width="100%">
                     <v-row>
                         <v-col cols=6>
                             <v-text-field v-model="event.id" label="ID" variant="outlined" density="compact"></v-text-field>
@@ -19,22 +19,18 @@
                     </v-row>
                     <v-row>
                         <v-col cols=6>
-                            <v-date-input v-model="event.date" label="MM/DD/YYYY" max-width="368"></v-date-input>
+                            <v-text-field v-model="event.type" label="Type" variant="outlined" density="compact"></v-text-field>
                         </v-col>
                         <v-col cols=6>
-                            <v-text-field v-model="event.time" :active="modal2" :focused="modal2" label="Time" prepend-icon="mdi-clock-time-four-outline" readonly>
-                                <v-dialog v-model="modal2" activator="parent" width="auto">
-                                    <v-time-picker v-if="modal2" v-model="event.time" ampm-in-title scrollable></v-time-picker>
-                                </v-dialog>
-                            </v-text-field>
+                            <v-date-input v-model="event.date" label="MM/DD/YYYY"></v-date-input>
                         </v-col>
                     </v-row>
                     <v-row>
-                        <v-col cols=9>
+                        <TimeSelector v-model="event.time" />
+                    </v-row>
+                    <v-row>
+                        <v-col cols=12>
                             <v-text-field v-model="event.name" label="Name" variant="outlined" density="compact"></v-text-field>
-                        </v-col>
-                        <v-col cols=3>
-                            <v-text-field v-model="event.type" label="Type" variant="outlined" density="compact"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-textarea v-model="event.description" label="Description" variant="outlined" density="compact" auto-grow="true"
@@ -52,6 +48,7 @@
 import eventServices from '@/services/eagle-flight/eventServices'
 import { ref, computed, watch } from 'vue'
 import { useEventStore } from '@/store/eventStore'
+import TimeSelector from '@/components/fp_edit_components/TimeSelector.vue'
 
 const eventStore = useEventStore();
 
