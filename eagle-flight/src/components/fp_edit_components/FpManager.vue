@@ -1,82 +1,103 @@
 <template>
-    <v-card color="secondary" height="450px" width="1400px">
+    <v-card color="secondary" height="470px" width="1400px">
         <v-container max-width="94%" class="px-0">
-            <v-card-title class="px-0 pb-6">
-                <v-title class="text-h4">Flight Plan Edit</v-title>
+            <v-card-title class="pb-0 mb-3 text-center">
+                <v-title class="text-h4">Flight Plan Template Edit</v-title>
             </v-card-title>
             <v-row>
-                <v-col cols="6">
-                    <v-select chips label="Major" :items="majors" v-model="selectedMajor" item-title="name"
-                        variant="outlined" return-object="true"></v-select>
+                <v-col cols="6" class="py-0">
+                    <v-select label="Template" :items="templates" v-model="editFpStore.selectedTemplate" item-title="title"
+                        variant="underlined" return-object="true"></v-select>
+                </v-col>
+                <v-col cols="2">
+                    <v-btn color="background" variant="flat" rounded="pill" @click="editFpStore.showOverlay = true">
+                        +Template
+                    </v-btn>
                 </v-col>
             </v-row>
-            <v-row>
-                <v-col cols="3" class="d-flex justify-center">
-                    <YearIcon :yearNumber="1" />
-                </v-col>
-                <v-col cols="3" class="d-flex justify-center">
-                    <YearIcon :yearNumber="2" />
-                </v-col>
-                <v-col cols="3" class="d-flex justify-center">
-                    <YearIcon :yearNumber="3" />
-                </v-col>
-                <v-col cols="3" class="d-flex justify-center">
-                    <YearIcon :yearNumber="4" />
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-spacer></v-spacer>
-                <v-btn class="mx-3" @click="cancelEdit()">Cancel</v-btn>
-                <v-btn class="mr-3">Save</v-btn>
-            </v-row>
+            <div v-show="editFpStore.selectedTemplate">
+                <v-row>
+                    <v-col cols="3" class="d-flex justify-center">
+                        <YearIcon :yearNumber="1" />
+                    </v-col>
+                    <v-col cols="3" class="d-flex justify-center">
+                        <YearIcon :yearNumber="2" />
+                    </v-col>
+                    <v-col cols="3" class="d-flex justify-center">
+                        <YearIcon :yearNumber="3" />
+                    </v-col>
+                    <v-col cols="3" class="d-flex justify-center">
+                        <YearIcon :yearNumber="4" />
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="6">
+                        <v-select chips multiple label="Target Majors" :items="majors" item-title="name" item-value="id"
+                            variant="outlined" v-model="selectedMajors"></v-select>
+                    </v-col>
+                    <v-col cols="6" class="d-flex align-center">
+                        <v-row class="d-flex justify-end">
+                            <v-btn class="mx-3" color="red" variant="outlined" rounded-lg @click="editFpStore.deletePlan"
+                                size="large">
+                                Delete
+                            </v-btn>
+                            <v-btn class="mx-3" color="background" variant="outlined" rounded-lg
+                                @click="editFpStore.saveData" size="large">
+                                Save
+                            </v-btn>
+                            <v-btn class="mx-3" color="background" variant="outlined" rounded-lg @click="cancelEdit"
+                                size="large">
+                                Cancel
+                            </v-btn>
+                        </v-row>
+                    </v-col>
+                </v-row>
+            </div>
         </v-container>
 
     </v-card>
 
 </template>
 <script setup>
-import majorServices from '@/services/eagle-flight/majorServices'
 import planServices from '@/services/eagle-flight/planServices'
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useEditFpStore } from '@/store/editFpStore'
+
 
 
 const editFpStore = useEditFpStore()
 const currentPlan = ref(null)
-const selectedMajor = ref(null)
 const majors = ref([])
-getMajors()
+const templates = computed(() => {
+    return editFpStore.templateList
+})
 
-watch(selectedMajor, (newVal, oldVal) => {
+onMounted(async () => {
+    try {
+        majors.value = await editFpStore.getMajors()
+    } catch (error) {
+        console.error("Failed to load majors:", error)
+        majors.value = []
+    }
+})
+
+watch(editFpStore.selectedTemplate, (newVal, oldVal) => {
     if (newVal) {
         console.log("new plan selected")
         console.log(newVal)
-        editFpStore.major = newVal.name
+        editFpStore.template = newVal.title
         getPlan()
     }
 })
 
-function getMajors() {
-    majorServices.getAll().then(
-        response => {
-            console.log(response.data)
-            majors.value = response.data
-        }
-    ).catch(
-        error => {
-            console.log(error)
-        }
-    )
-}
-
 function getPlan() {
     // resetCurrentPlanTasks()
-    planServices.getForMajorId(selectedMajor.value.id).then(
+    planServices.getForId(editFpStore.selectedTemplate.value.id).then(
         response => {
             currentPlan.value = response.data
             console.log("Current plan:")
             console.log(currentPlan.value)
-            editFpStore.currentPlanId= currentPlan.value.id
+            editFpStore.currentPlanId = currentPlan.value.id
             populateSemesters()
         }
     ).catch(
@@ -92,7 +113,7 @@ function populateSemesters() {
     for (const task of currentPlan.value.tasks) {
         console.log("task: " + task)
         const yearIndex = 4 - Math.ceil(task.taskInSemester.semesterUntilGraduation / 2)
-        const semesterIndex = (task.taskInSemester.semesterUntilGraduation ) % 2
+        const semesterIndex = (task.taskInSemester.semesterUntilGraduation) % 2
         console.log(`Year: ${yearIndex}, Semester: ${semesterIndex}`)
         editFpStore.pushToCurrentPlanTasks(task, yearIndex, semesterIndex)
         console.log(editFpStore.currentPlanTasks.value)
@@ -100,9 +121,8 @@ function populateSemesters() {
 }
 
 function cancelEdit() {
-    selectedMajor.value = null
-    currentPlan.value = null
-    resetCurrentPlanTasks()
+    editFpStore.selectedTemplate.value = null
+    editFpStore.clearSemesters()
 }
 
 
