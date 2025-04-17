@@ -13,11 +13,20 @@
                         </v-col>
                     </v-row>
                     <v-row>
-                        <v-col cols=6>
+                        <v-col cols=12>
                             <v-text-field v-model="event.location" label="Location" variant="outlined" density="compact"></v-text-field>
                         </v-col>
+                    </v-row>
+                    <v-row>
                         <v-col cols=6>
                             <v-date-input v-model="event.date" label="MM/DD/YYYY" max-width="368"></v-date-input>
+                        </v-col>
+                        <v-col cols=6>
+                            <v-text-field v-model="event.time" :active="modal2" :focused="modal2" label="Time" prepend-icon="mdi-clock-time-four-outline" readonly>
+                                <v-dialog v-model="modal2" activator="parent" width="auto">
+                                    <v-time-picker v-if="modal2" v-model="event.time" ampm-in-title scrollable></v-time-picker>
+                                </v-dialog>
+                            </v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -51,6 +60,7 @@ let event = ref({
     experienceID: "",
     location:"",
     date:"",
+    time:"",
     name: "",
     type:"",
     description: ""
@@ -65,6 +75,7 @@ watch(newEvent, () => {
         experienceID: "",
         location:"",
         date:"",
+        time: "",
         name: "",
         type:"",
         description: ""
@@ -82,6 +93,7 @@ function cancelAction(){
         experienceID: "",
         location:"",
         date:"",
+        time:"",
         name: "",
         type:"",
         description: ""
