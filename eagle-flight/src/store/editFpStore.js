@@ -7,26 +7,24 @@ import { watch } from 'vue';
 
 export const useEditFpStore = defineStore('editFpStore', () => {
     const expandedComboOpen = ref(false)
+    const showOverlay = ref(false)
+    const showDeleteOverlay = ref(false)
+    const showSaveOverlay = ref(false)
+
     const semesterNumber = ref(null)
     const yearNumber = ref(null)
     const taskList = ref([])
-    const template = ref(null)
     const currentPlanTasks = ref([[[], []], [[], []], [[], []], [[], []]])
-    const currentPlanId = ref(null)
-    const showOverlay = ref(false)
+    const currentPlan = ref(null)
     const templateList = ref([])
     const tasks = ref([])
     const availableTasks = ref([])
     const selectedTemplate = ref(null)
 
     getPlans()
+
     // for testing purposes. In the future we might want to call it when needed
     getTasks()
-
-    function pushToCurrentPlanTasks(task, yearIndex, semesterIndex) {
-        console.log(`pushing ${task} to ${yearIndex} ${semesterIndex}`)
-        currentPlanTasks.value[yearIndex][semesterIndex].push(task)
-    }
 
     function clearSemesters() {
         for (let year = 0; year < 4; year++) {
@@ -41,6 +39,39 @@ export const useEditFpStore = defineStore('editFpStore', () => {
 
     function getSemesterUntilGraduation() {
         return (9 - (yearNumber.value - 1) * 2 - semesterNumber.value)
+    }
+
+    watch(selectedTemplate, (newVal) => {
+        if (newVal) {
+            getPlan()
+        }
+    })
+
+    function getPlan() {
+        planServices.getForId(selectedTemplate.value.id).then(
+            response => {
+                currentPlan.value = response.data
+                populateSemesters()
+            }
+        ).catch(
+            error => {
+                console.log(error)
+            }
+        )
+    }
+
+    function populateSemesters() {
+        clearSemesters()
+        console.log("Populating semesters")
+        for (const task of currentPlan.value.tasks) {
+            const yearIndex = 4 - Math.ceil(task.taskInSemester.semesterUntilGraduation / 2)
+            const semesterIndex = (task.taskInSemester.semesterUntilGraduation) % 2
+            pushToCurrentPlanTasks(task, yearIndex, semesterIndex)
+        }
+    }
+
+    function pushToCurrentPlanTasks(task, yearIndex, semesterIndex) {
+        currentPlanTasks.value[yearIndex][semesterIndex].push(task)
     }
 
     // api call
@@ -95,7 +126,7 @@ export const useEditFpStore = defineStore('editFpStore', () => {
         let canContinue = false;
 
         try {
-            const res = await planServices.deleteAllInPlan(currentPlanId.value);
+            const res = await planServices.deleteAllInPlan(currentPlan.value.id);
             if (res.status === 200) {
                 canContinue = true;
             }
@@ -117,21 +148,24 @@ export const useEditFpStore = defineStore('editFpStore', () => {
                             taskId: task.id,
                             semesterUntilGraduation: semesterUntilGraduation
                         }
-                        await planServices.addTask(currentPlanId.value, body)
+                        await planServices.addTask(currentPlan.value.id, body)
                     }
                 }
             }
         }
     }
 
-    function deletePlan(){
-        planServices.delete(currentPlanId.value).then((response) => {
+    function deletePlan() {
+        planServices.delete(currentPlan.value.id).then((response) => {
             console.log(response.data)
             getPlans()
+            currentPlan.value = null
+            clearSemesters()
+            showDeleteOverlay.value = false
         }).catch((error) => {
             console.log(error)
         })
     }
 
-    return { expandedComboOpen, semesterNumber, taskList, template, currentPlanTasks, yearNumber, currentPlanId, showOverlay, templateList, availableTasks, selectedTemplate, pushToCurrentPlanTasks, clearSemesters, getSemesterUntilGraduation, getMajors, setAvailableTasks, saveData, deletePlan };
+    return { expandedComboOpen, showDeleteOverlay, showSaveOverlay,semesterNumber, taskList, currentPlanTasks, yearNumber, currentPlan, showOverlay, templateList, availableTasks, selectedTemplate, pushToCurrentPlanTasks, clearSemesters, getSemesterUntilGraduation, getMajors, setAvailableTasks, saveData, deletePlan, getPlans };
 });

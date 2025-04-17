@@ -49,6 +49,7 @@ const saveTemplate = async () => {
             await majorServices.update(majorId, { planId: planId });
         }
 
+        editFpStore.getPlans();
         editFpStore.showOverlay = false;
     } catch (error) {
         console.error("Failed to save template:", error);

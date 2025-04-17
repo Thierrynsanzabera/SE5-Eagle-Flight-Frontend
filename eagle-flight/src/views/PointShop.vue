@@ -151,7 +151,7 @@ let redemptionHistory = ref([]); // Redemption history for the student
 let historyDialog = ref(false); // Controls the visibility of the history dialog
 
 // Admin-specific dialog and form data
-let adminView = ref(true);  // Manually set adminView to true (admin mode) or false (student mode)
+let adminView = ref(false);  // Manually set adminView to true (admin mode) or false (student mode)
 let createRedeemableDialog = ref(false);
 let newRedeemable = ref({
   name: '',

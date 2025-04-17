@@ -4,7 +4,7 @@
         <v-card color="transparent" width="100%" height="90%" class="d-flex justify-center align-center">
             <v-list bg-color="transparent" width=96% max-height=96%>
                 <v-card v-for="task in editFpStore.availableTasks" :key="task.id" class="d-flex align-center mb-3"
-                    color="background" height="30px" @click="selectTask(task)">
+                    color="background" height="30px">
                     <v-card-title class="d-flex w-100">
                         <span class="text-overline">{{ task.name }}</span>
                         <v-spacer></v-spacer>

@@ -6,8 +6,8 @@
             </v-card-title>
             <v-row>
                 <v-col cols="6" class="py-0">
-                    <v-select label="Template" :items="templates" v-model="editFpStore.selectedTemplate" item-title="title"
-                        variant="underlined" return-object="true"></v-select>
+                    <v-select label="Template" :items="templates" v-model="editFpStore.selectedTemplate"
+                        item-title="title" variant="underlined" return-object="true"></v-select>
                 </v-col>
                 <v-col cols="2">
                     <v-btn color="background" variant="flat" rounded="pill" @click="editFpStore.showOverlay = true">
@@ -37,12 +37,12 @@
                     </v-col>
                     <v-col cols="6" class="d-flex align-center">
                         <v-row class="d-flex justify-end">
-                            <v-btn class="mx-3" color="red" variant="outlined" rounded-lg @click="editFpStore.deletePlan"
-                                size="large">
+                            <v-btn class="mx-3" color="red" variant="outlined" rounded-lg
+                                @click="editFpStore.showDeleteOverlay = true" size="large">
                                 Delete
                             </v-btn>
-                            <v-btn class="mx-3" color="background" variant="outlined" rounded-lg
-                                @click="editFpStore.saveData" size="large">
+                            <v-btn class="mx-3" color="background" variant="outlined" rounded-lg @click="saveData"
+                                size="large">
                                 Save
                             </v-btn>
                             <v-btn class="mx-3" color="background" variant="outlined" rounded-lg @click="cancelEdit"
@@ -59,18 +59,18 @@
 
 </template>
 <script setup>
-import planServices from '@/services/eagle-flight/planServices'
-import { ref, watch, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useEditFpStore } from '@/store/editFpStore'
-
-
+import majorServices from '@/services/eagle-flight/majorServices'
 
 const editFpStore = useEditFpStore()
-const currentPlan = ref(null)
 const majors = ref([])
+const selectedMajors = ref()
+const selectedMajorsCopy = ref([])
 const templates = computed(() => {
     return editFpStore.templateList
 })
+const currentPlanId = ref("")
 
 onMounted(async () => {
     try {
@@ -79,46 +79,46 @@ onMounted(async () => {
         console.error("Failed to load majors:", error)
         majors.value = []
     }
-})
+    watch(
+        () => editFpStore.currentPlan,
+        (newPlan) => {
+            if (newPlan && newPlan.id) {
+                currentPlanId.value = newPlan.id
+                selectedMajors.value = majors.value
+                    .filter(major => major.planId === currentPlanId.value)
+                    .map(major => major.id)
+                selectedMajorsCopy.value = [...selectedMajors.value] // Make a reactive copy
 
-watch(editFpStore.selectedTemplate, (newVal, oldVal) => {
-    if (newVal) {
-        console.log("new plan selected")
-        console.log(newVal)
-        editFpStore.template = newVal.title
-        getPlan()
-    }
-})
-
-function getPlan() {
-    // resetCurrentPlanTasks()
-    planServices.getForId(editFpStore.selectedTemplate.value.id).then(
-        response => {
-            currentPlan.value = response.data
-            console.log("Current plan:")
-            console.log(currentPlan.value)
-            editFpStore.currentPlanId = currentPlan.value.id
-            populateSemesters()
-        }
-    ).catch(
-        error => {
-            console.log(error)
-        }
+            }
+        },
+        { immediate: true } // Runs immediately in case it's already there
     )
-}
+})
 
-function populateSemesters() {
-    editFpStore.clearSemesters()
-    console.log("Populating semesters")
-    for (const task of currentPlan.value.tasks) {
-        console.log("task: " + task)
-        const yearIndex = 4 - Math.ceil(task.taskInSemester.semesterUntilGraduation / 2)
-        const semesterIndex = (task.taskInSemester.semesterUntilGraduation) % 2
-        console.log(`Year: ${yearIndex}, Semester: ${semesterIndex}`)
-        editFpStore.pushToCurrentPlanTasks(task, yearIndex, semesterIndex)
-        console.log(editFpStore.currentPlanTasks.value)
+async function saveData() {
+    const added = selectedMajors.value.filter(id => !selectedMajorsCopy.value.includes(id))
+    const removed = selectedMajorsCopy.value.filter(id => !selectedMajors.value.includes(id))
+
+    console.log("Added majors:", added)
+    console.log("Removed majors:", removed)
+
+    try {
+        for (const majorId of added) {
+            await majorServices.update(majorId, { planId: currentPlanId.value })
+        }
+
+        for (const majorId of removed) {
+            await majorServices.update(majorId, { planId: null })
+        }
+
+        await editFpStore.saveData()
+        selectedMajorsCopy.value = [...selectedMajors.value]
+        editFpStore.showSaveOverlay = true
+    } catch (error) {
+        console.error("Failed to update majors:", error)
     }
 }
+
 
 function cancelEdit() {
     editFpStore.selectedTemplate.value = null
