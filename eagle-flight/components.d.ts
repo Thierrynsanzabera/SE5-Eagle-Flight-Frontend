@@ -23,6 +23,7 @@ declare module 'vue' {
     FlightPlanSemesterCard: typeof import('./src/components/fp_components/FlightPlanSemesterCard.vue')['default']
     FpManager: typeof import('./src/components/fp_edit_components/FpManager.vue')['default']
     IconRow: typeof import('./src/components/IconRow.vue')['default']
+    NewTemplateOverlay: typeof import('./src/components/fp_edit_components/NewTemplateOverlay.vue')['default']
     Resume: typeof import('./src/components/Resume.vue')['default']
     ResumePreview: typeof import('./src/components/ResumePreview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

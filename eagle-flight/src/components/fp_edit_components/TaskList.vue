@@ -36,7 +36,6 @@ function selectTask(task) {
 function getTasks() {
     taskServices.getAll().then(
         response => {
-            console.log(response.data)
             tasks.value = response.data
         }
     ).catch(

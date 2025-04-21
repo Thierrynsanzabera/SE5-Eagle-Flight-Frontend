@@ -1,5 +1,6 @@
 <template>
-    <v-card color="primary" width="136px" height="160px" rounded="true" hover="true" class="hoverable" @click="expandSemester()">
+    <v-card color="primary" width="136px" height="160px" rounded="true" hover="true" class="hoverable"
+        @click="expandSemester()">
         <v-card-title class="pb-0 text-center text-caption">Semester {{ semesterNumber }}</v-card-title>
         <v-container class="d-flex justify-center px-0 py-0" height="80%">
             <v-list bg-color="transparent" width="96%" max-height=96% class="my-list">
@@ -14,7 +15,7 @@
     </v-card>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useEditFpStore } from '@/store/editFpStore'
 
 const editFpStore = useEditFpStore()
@@ -24,7 +25,7 @@ const props = defineProps({
     semesterNumber: Number,
 })
 
-const tasks = ref(editFpStore.currentPlanTasks[props.yearNumber-1][props.semesterNumber-1])
+const tasks = computed(() => editFpStore.currentPlanTasks[props.yearNumber - 1][props.semesterNumber - 1])
 
 function expandSemester() {
     editFpStore.expandedComboOpen = true
@@ -35,12 +36,12 @@ function expandSemester() {
 </script>
 <style scoped>
 .hoverable {
-  transition: transform 0.3s ease, filter 0.3s ease;
+    transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .hoverable:hover {
-  transform: scale(1.02);
-  filter: brightness(1.1);
+    transform: scale(1.02);
+    filter: brightness(1.1);
 }
 
 .my-list::-webkit-scrollbar {
