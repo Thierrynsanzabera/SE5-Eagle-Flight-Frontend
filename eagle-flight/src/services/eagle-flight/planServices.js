@@ -27,5 +27,11 @@ export default {
   },
   deleteAllInPlan(planId) {
     return apiClient.delete(`/plan/${planId}/tasks`);
+  },
+  startInstance(userId) {
+    return apiClient.post(`/plan/plan-instance/start/${userId}`);
+  },
+  populateInstance(userId) {
+    return apiClient.post(`/plan/plan-instance/populate/${userId}`);
   }
 };

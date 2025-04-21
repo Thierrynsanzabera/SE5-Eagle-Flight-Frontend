@@ -4,8 +4,8 @@
             {{ title }}
         </v-card-title>
         <v-tabs v-model="selectedCategory" bg-color="background" class="mb-0" height="35px">
-            <v-tab value="tasks">Tasks</v-tab>
-            <v-tab value="experiences">Experiences</v-tab>
+            <v-tab value="tasks">Tasks({{ tasksLeft }})</v-tab>
+            <v-tab value="experiences">Experiences({{ experiencesLeft }})</v-tab>
         </v-tabs>
         <v-container class="d-flex justify-center align-center px-0 pt-0 mx-0" height="85%" width="100%">
             <v-list bg-color="secondary" class="my-list px-1" style="overflow-y: auto;" width=100% height=98%
@@ -31,6 +31,10 @@
 import { computed, ref, watch } from 'vue'
 import instanceTaskServices from '@/services/eagle-flight/instanceTask.services'
 import { useFpInstanceStore } from '@/store/instanceFpStore'
+import Utils from '@/config/utils'
+
+let user = Utils.getStore("user");
+let userId = user.userId;
 
 const selectedCategory = ref('tasks')
 
@@ -58,6 +62,20 @@ const currentSemesterUntilGraduation = computed(() => {
 const totalTasks = ref([]);
 getInstanceTasks()
 
+const tasksLeft = computed(() => {
+    return totalTasks.value.filter(task => 
+        task.semesterUntilGraduation === currentSemesterUntilGraduation.value &&
+        task.task.isExperience === false
+    ).length;
+});
+
+const experiencesLeft = computed(() => {
+    return totalTasks.value.filter(task => 
+        task.semesterUntilGraduation === currentSemesterUntilGraduation.value &&
+        task.task.isExperience === true
+    ).length;
+});
+
 const filteredTasks = computed(() => {
     return totalTasks.value.filter(task => {
         const matchesSemester = task.semesterUntilGraduation === currentSemesterUntilGraduation.value;
@@ -73,8 +91,7 @@ const filteredTasks = computed(() => {
 
 
 function getInstanceTasks() {
-    // STILL NEED TO GET USERS ID, CURRENTLY MANUALLY INPUTTING FOR TESTING
-    instanceTaskServices.getAllForUserId(1).then(
+    instanceTaskServices.getAllForUserId(userId).then(
         response => {
             console.log(response.data)
             totalTasks.value = response.data
