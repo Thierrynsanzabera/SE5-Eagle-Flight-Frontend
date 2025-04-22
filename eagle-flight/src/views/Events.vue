@@ -1,7 +1,7 @@
 <template>
     <v-overlay :model-value="editEventStore.expandedComboOpen" class="d-flex justify-center align-center" z-index="1"
         scrim="black" @click:outside="editEventStore.expandedComboOpen = false">
-        <ExpandedCombo />
+        <ExpandedEventsCombo />
     </v-overlay>
     <v-card color="transparent" height="64"></v-card>
     <v-container>
@@ -22,9 +22,9 @@
 import { computed } from "vue";
 import { useEditEventStore } from "@/store/editEventStore";
 import { useEventStore } from "@/store/eventStore";
-import EventList from "@/components/fp_edit_components/EventList.vue";
-import EventStudents from "@/components/fp_edit_components/EventStudents.vue";
-import ExpandedCombo from "@/components/fp_edit_components/ExpandedCombo.vue";
+import EventList from "@/components/event_components/EventList.vue";
+import EventStudents from "@/components/event_components/EventStudents.vue";
+import ExpandedEventsCombo from "@/components/event_components/ExpandedEventsCombo.vue";
 
 const editEventStore = useEditEventStore();
 const eventStore = useEventStore();
