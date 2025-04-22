@@ -16,4 +16,7 @@ import apiClient from "../services.js";
    deleteAllEvents() {
      return apiClient.delete(`/event`);
    },
+   getStudentsForEvent(id) {
+    return apiClient.get(`/event/${id}/students`)
+  }  
  };

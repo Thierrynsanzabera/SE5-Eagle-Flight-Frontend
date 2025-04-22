@@ -1,15 +1,12 @@
 <template>
-    <v-card color="primary" width="500px" height="500px">
+    <v-card color="primary" class="pa-4" style="width: 100%; height: 100%; max-height: 90vh; overflow-y: auto;">
         <v-card-title class="text-center pb-0">{{currentAction}} Event</v-card-title>
         <v-card color="transparent" class="d-flex align-center justify-center" width="100%" height="80%" variant="flat">
             <v-list bg-color="transparent" width=96% max-height=100%>
                 <v-container width="100%">
                     <v-row>
-                        <v-col cols=6>
-                            <v-text-field v-model="event.id" label="ID" variant="outlined" density="compact"></v-text-field>
-                        </v-col>
-                        <v-col cols=6>
-                            <v-text-field v-model="event.experienceID" label="ExperienceID" variant="outlined" density="compact"></v-text-field>
+                        <v-col cols=12>
+                            <v-text-field v-model="event.name" label="Name" variant="outlined" density="compact"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -18,43 +15,43 @@
                         </v-col>
                     </v-row>
                     <v-row>
-                        <v-col cols=6>
+                        <v-col cols=12>
                             <v-text-field v-model="event.type" label="Type" variant="outlined" density="compact"></v-text-field>
                         </v-col>
-                        <v-col cols=6>
+                    </v-row>
+                    <v-row>
+                        <v-col cols=4>
                             <v-date-input v-model="event.date" label="MM/DD/YYYY"></v-date-input>
                         </v-col>
-                    </v-row>
-                    <v-row>
-                        <TimeSelector v-model="event.time" />
-                    </v-row>
-                    <v-row>
-                        <v-col cols=12>
-                            <v-text-field v-model="event.name" label="Name" variant="outlined" density="compact"></v-text-field>
+                        <v-col cols="8">
+                            <TimeSelector v-model="event.time" />
                         </v-col>
                     </v-row>
+
                     <v-textarea v-model="event.description" label="Description" variant="outlined" density="compact" auto-grow="true"
                         rows=2></v-textarea>
                 </v-container>
             </v-list>
         </v-card>
-        <v-row class="d-flex justify-center mt-0">
+        <v-row class="d-flex justify-center">
             <v-btn class="mr-1" color="secondary" @click="cancelAction">Cancel</v-btn>
             <v-btn color="secondary" @click="doAction">{{ currentAction }}</v-btn>
         </v-row>
+        <br>
     </v-card>
 </template>
 <script setup>
 import eventServices from '@/services/eagle-flight/eventServices'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeMount } from 'vue'
 import { useEventStore } from '@/store/eventStore'
 import TimeSelector from '@/components/fp_edit_components/TimeSelector.vue'
+
+const emit = defineEmits(['close'])
 
 const eventStore = useEventStore();
 
 let event = ref({
-    id:"",
-    experienceID: "",
+    // experienceID: "",
     location:"",
     date:"",
     time:"",
@@ -63,20 +60,21 @@ let event = ref({
     description: ""
 })
 
-const newEvent = computed(() => eventStore.selectedEvent);
 const currentAction = ref("Add");
-watch(newEvent, () => {
-    currentAction.value = eventStore.selectedEvent == null ? "Add" : "Edit";
-    event.value = eventStore.selectedEvent == null ? {
-        id:"",
-        experienceID: "",
-        location:"",
-        date:"",
+
+onBeforeMount(() => {
+    const selected = eventStore.selectedEvent
+    currentAction.value = selected == null ? "Add" : "Edit";
+
+    Object.assign(event.value, selected ?? {
+        // experienceID: "",
+        location: "",
+        date: "",
         time: "",
         name: "",
-        type:"",
+        type: "",
         description: ""
-    } : eventStore.selectedEvent;
+    });
 });
 
 function doAction (){
@@ -86,8 +84,7 @@ function doAction (){
 
 function cancelAction(){
     event.value = {
-        id:"",
-        experienceID: "",
+        // experienceID: "",
         location:"",
         date:"",
         time:"",
@@ -95,23 +92,30 @@ function cancelAction(){
         type:"",
         description: ""
     }
-    eventStore.cancelSelectedEvent()
+    
+    emit('close')
+    emit('refresh')
+    setTimeout(() => {eventStore.cancelSelectedEvent()}, 0)
 }
 
-function addEvent (){
-    eventServices.addEvent(event.value).then(
-        cancelAction()
-    ).catch(
-        error => {
-            console.log(error)
-        }
-    )
+function addEvent () {
+  eventServices.addEvent(event.value)
+    .then(() => {
+      cancelAction()
+    })
+    .catch(error => {
+      console.log(error)
+    })
 }
 
-function updateEvent (){
-    eventServices.updateEvent(event.value.id, event.value).then(
-        cancelAction()
-    )
+function updateEvent () {
+  eventServices.updateEvent(event.value.id, event.value)
+    .then(() => {
+      cancelAction()
+    })
+    .catch(error => {
+      console.log(error)
+    })
 }
 </script>
 <style scoped></style>
