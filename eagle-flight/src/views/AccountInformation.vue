@@ -48,7 +48,7 @@
                         <v-row>
                             <v-col cols="6">
                                 <v-card color="transparent">
-                                    <v-text-field label="Major" :model-value="userBody.getMajor"
+                                    <v-text-field label="Major" :model-value="userBody.major"
                                         readonly></v-text-field>
                                 </v-card>
                             </v-col>
@@ -94,43 +94,39 @@
                 </v-col>
                 <v-col>
                     <v-card color="transparent" elevation="8" class="px-4">
-  <v-card-title>Clifton Strengths</v-card-title>
+                        <v-card-title>Clifton Strengths</v-card-title>
 
-  <v-row>
-    <v-col cols="12">
-      <p class="text-body-1">
-        Take the CliftonStrengths test to discover your top 5 strengths. After finishing, select them below.
-      </p>
-    </v-col>
-  </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <p class="text-body-1">
+                                    Take the CliftonStrengths test to discover your top 5 strengths. After finishing,
+                                    select them below.
+                                </p>
+                            </v-col>
+                        </v-row>
 
-  <v-row>
-    <v-col cols="12">
-      <v-select
-        v-model="userBody.strengths"
-        :items="cliftonStrengths"
-        label="Select your Top 5 Strengths"
-        multiple
-        chips
-        :rules="[v => (v.length <= 5) || 'You can only select up to 5 strengths']"
-        item-text="name"
-        item-value="name"
-      ></v-select>
-    </v-col>
-  </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-select v-model="userBody.strengths" :items="cliftonStrengths"
+                                    label="Select your Top 5 Strengths" multiple chips
+                                    :rules="[v => (v.length <= 5) || 'You can only select up to 5 strengths']"
+                                    item-text="name" item-value="name"></v-select>
+                            </v-col>
+                        </v-row>
 
-  <v-row>
-    <v-col cols="12">
-      <v-btn
-        color="primary"
-        href="https://my.gallup.com/_Home/RedeemAccessCode"
-        target="_blank"
-      >
-        Take the test
-      </v-btn>
-    </v-col>
-  </v-row>
-</v-card>
+                        <v-row class="align-center mt-n4">
+                          <v-col cols="6">
+                            <v-btn color="primary" href="https://my.gallup.com/_Home/RedeemAccessCode" target="_blank">
+                              Take the test
+                            </v-btn>
+                          </v-col>
+                          <v-col cols="6" class="text-right">
+                            <v-btn color="green" @click="saveStrengths">
+                              Save
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                    </v-card>
                 </v-col>
             </v-row>
             <v-row>
@@ -182,12 +178,12 @@ let userBody = ref({
     pfp: "https://media.newyorker.com/photos/5b203f425ee2c7040773fedc/4:3/w_2251,h_1688,c_limit/760209_ra523.jpg",
 });
 const cliftonStrengths = [
-  "Achiever", "Activator", "Adaptability", "Analytical", "Arranger", "Belief",
-  "Command", "Communication", "Competition", "Connectedness", "Consistency",
-  "Context", "Deliberative", "Developer", "Discipline", "Empathy", "Focus",
-  "Futuristic", "Harmony", "Ideation", "Includer", "Individualization",
-  "Input", "Intellection", "Learner", "Maximizer", "Positivity", "Relator",
-  "Responsibility", "Restorative", "Self-Assurance", "Significance", "Strategic", "Woo"
+    "Achiever", "Activator", "Adaptability", "Analytical", "Arranger", "Belief",
+    "Command", "Communication", "Competition", "Connectedness", "Consistency",
+    "Context", "Deliberative", "Developer", "Discipline", "Empathy", "Focus",
+    "Futuristic", "Harmony", "Ideation", "Includer", "Individualization",
+    "Input", "Intellection", "Learner", "Maximizer", "Positivity", "Relator",
+    "Responsibility", "Restorative", "Self-Assurance", "Significance", "Strategic", "Woo"
 ];
 
 userBody.value.strengths = []; // default empty selection
