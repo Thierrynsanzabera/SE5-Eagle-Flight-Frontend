@@ -23,8 +23,11 @@
     </v-card>
 </template>
 <script setup>
-import { ref } from 'vue'
-const progress = ref(50)
+import { ref, computed } from 'vue'
+import { useFpInstanceStore } from '@/store/instanceFpStore'
+
+const fpInstanceStore = useFpInstanceStore()
+const progress = computed(() => fpInstanceStore.progress)
 const semesters = ref([
     { name: "FA21", semesterFromGraduation: 8 },
     { name: "SP22", semesterFromGraduation: 7 },
