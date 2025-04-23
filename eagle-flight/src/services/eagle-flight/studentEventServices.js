@@ -7,6 +7,9 @@ export default {
     getStudentsForEvent(eventId) {
         return apiClient.get(`/studentEvent/${eventId}`);
     },
+    getAllStudentsWithNames() {
+        return apiClient.get("/studentEvent/getAllStudentsWithNames");
+    },
     updateStudentStatus(eventId, studentUserID, data) {
         return apiClient.put(`/studentEvent/${eventId}/${studentUserID}`, data);
     },
