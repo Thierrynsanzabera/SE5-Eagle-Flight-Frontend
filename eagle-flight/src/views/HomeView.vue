@@ -1,5 +1,5 @@
 <template>
-    <v-overlay v-model="showOverlay" class="d-flex justify-center align-center" z-index="1">
+    <v-overlay v-model="fpInstanceStore.showOverlay" class="d-flex justify-center align-center" z-index="1">
         <ExpandedTask />
     </v-overlay>
 
@@ -17,11 +17,8 @@
 
 <script setup>
 import { useFpInstanceStore } from '@/store/instanceFpStore';
-import { computed } from 'vue'
 
 const fpInstanceStore = useFpInstanceStore()
-
-const showOverlay = computed(() => fpInstanceStore.showOverlay)
 
 </script>
 <style scoped></style>

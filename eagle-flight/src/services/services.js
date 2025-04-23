@@ -20,6 +20,10 @@ const apiClient = axios.create({
     crossDomain: true,
   },
   transformRequest: (data, headers) => {
+    if (data instanceof FormData) {
+      // Let axios handle it — do NOT stringify or set headers
+      return data;
+    }
     let user = Utils.getStore("user");
     if (user != null) {
       let token = user.token;

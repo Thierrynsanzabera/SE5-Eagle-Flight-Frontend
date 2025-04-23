@@ -27,6 +27,9 @@ export default {
     update(studentId, data) {
         return apiClient.put(`/student/${studentId}`, data);
     },
+    addPoints(studentId, points) {
+        return apiClient.put(`/student/points/${studentId}`, { points: points });
+    },
     delete(id) {
         return apiClient.delete(`/student/${id}`);
     },
