@@ -45,7 +45,8 @@ const pagesAdmin = [
   { name: "Manage Events", path: "events" },
   { name: "Manage Users", path: "manage-users" },
   { name: "Manage Majors", path: "manage-majors" },
-  { name: "Manage Badges", path: "manage-badges" }
+  { name: "Manage Badges", path: "manage-badges" },
+  { name: "Manage Roles", path: "manage-roles"}
 ];
 
 const pagesStudent = [
