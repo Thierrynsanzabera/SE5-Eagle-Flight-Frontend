@@ -19,7 +19,7 @@
                         <v-card v-if="!task.isPostponed" color="primary" height="26px"
                             class="d-flex justify-center align-center" variant="text">
                             {{
-                                fpInstanceStore.getSubmissionStatus(task.submissions).text
+                                fpInstanceStore.getSubmissionStatus(task).text
                             }}
                         </v-card>
                         <v-card v-else color="primary" height="26px" class="d-flex justify-center align-center"
