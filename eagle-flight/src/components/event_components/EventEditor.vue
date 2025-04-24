@@ -16,7 +16,15 @@
                     </v-row>
                     <v-row>
                         <v-col cols=12>
-                            <v-text-field v-model="event.type" label="Type" variant="outlined" density="compact"></v-text-field>
+                            <v-select
+                                v-model="event.taskId"
+                                :items="experienceTasks"
+                                item-title="name"
+                                item-value="id"
+                                label="Select Experience (Optional)"
+                                variant="outlined"
+                                density="compact"
+                            />
                         </v-col>
                     </v-row>
                     <v-row>
@@ -45,6 +53,9 @@ import eventServices from '@/services/eagle-flight/eventServices'
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { useEventStore } from '@/store/eventStore'
 import TimeSelector from '@/components/fp_edit_components/TimeSelector.vue'
+import taskServices from '@/services/eagle-flight/taskServices'
+
+
 
 const emit = defineEmits(['close'])
 
@@ -57,10 +68,12 @@ let event = ref({
     time:"",
     name: "",
     type:"",
-    description: ""
+    description: "",
+    taskId: null
 })
 
 const currentAction = ref("Add");
+const experienceTasks = ref([]);
 
 onBeforeMount(() => {
     const selected = eventStore.selectedEvent
@@ -73,7 +86,15 @@ onBeforeMount(() => {
         time: "",
         name: "",
         type: "",
-        description: ""
+        description: "",
+        taskId: null
+    });
+    taskServices.getAll()
+    .then(response => {
+      experienceTasks.value = response.data.filter(task => task.isExperience);
+    })
+    .catch(error => {
+      console.error("Error fetching tasks:", error);
     });
 });
 
@@ -90,7 +111,8 @@ function cancelAction(){
         time:"",
         name: "",
         type:"",
-        description: ""
+        description: "",
+        taskId: null
     }
     
     emit('close')
