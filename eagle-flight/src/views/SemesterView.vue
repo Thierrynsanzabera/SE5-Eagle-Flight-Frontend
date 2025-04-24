@@ -1,6 +1,28 @@
 <template>
-    <v-container class="d-flex justify-center align-center" height="100%">
-        <v-card color="transparent" height="64px"></v-card>
+    <v-overlay v-model="showOverlay" class="d-flex justify-center align-center">
+        <v-card height="260px" width="500">
+            <v-card-title class="text-center">Are you Sure You want to Refresh Status?</v-card-title>
+            <v-card-text class="text-center mb-4">Refreshing tasks will calculate our current semester and potentially
+                push
+                unfinished
+                tasks.</v-card-text>
+            <v-btn width="100%" color="primary" class="mb-4" size="large" @click="refreshStatus()">Refresh
+                Status</v-btn>
+            <v-btn width="100%" color="primary" size="large" @click="showOverlay = false">Cancel</v-btn>
+        </v-card>
+    </v-overlay>
+    <v-overlay v-model="affectedOverlay" class="d-flex justify-center align-center">
+        <v-card height="260px" width="500">
+            <v-card-title class="text-center">Status Refreshed</v-card-title>
+            <v-card-text class="text-center mb-4">Successfully refreshed status. Rows affected: {{ rowsAffected
+                }}</v-card-text>
+            <v-btn width="100%" color="primary" class="mb-4" size="large" @click="affectedOverlay = false">OK</v-btn>
+        </v-card>
+    </v-overlay>
+
+    <v-card color="transparent" height="100px" flat></v-card>
+
+    <v-container class="d-flex justify-center" height="450px">
         <v-card color="primary" width="600" height="420" class="pa-6">
             <v-card-title class="text-h4 text-center">Manage Semesters</v-card-title>
             <v-row class="d-flex justify-center align-center">
@@ -45,7 +67,10 @@
         </v-card>
 
     </v-container>
-
+    <v-container class="d-flex justify-center align-center" width="100%">
+        <v-btn size="large" class="mb-2" width="600" color="primary" variant="outlined"
+            @click="showOverlay = true">Refresh Semester Status</v-btn>
+    </v-container>
 </template>
 
 <script setup>
@@ -55,6 +80,9 @@ import semesterServices from '@/services/eagle-flight/semesterServices';
 const allSemesters = ref([]);
 getSemesters();
 
+const showOverlay = ref(false)
+const affectedOverlay = ref(false)
+const rowsAffected = ref(0)
 
 const isUpdate = ref(false);
 const isNewYear = ref(false);
@@ -154,6 +182,12 @@ function updateSemester() {
             console.log(error)
         }
     )
+}
+
+async function refreshStatus() {
+    const response = await semesterServices.refreshStatus()
+    rowsAffected.value = response.data.totalRowsUpdated
+    affectedOverlay.value = true
 }
 </script>
 <style></style>

@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { watch, ref, computed } from 'vue';
 import instanceTaskServices from '@/services/eagle-flight/instanceTask.services';
+import studentServices from '@/services/eagle-flight/studentServices';
+import semesterServices from '@/services/eagle-flight/semesterServices';
 import Utils from '@/config/utils'
 
 export const useFpInstanceStore = defineStore('fpInstanceStore', () => {
@@ -8,6 +10,10 @@ export const useFpInstanceStore = defineStore('fpInstanceStore', () => {
     let userId = user.userId;
     const selectedSemester = ref(null);
     const selectedTask = ref(null);
+
+    const semesters = ref([])
+
+    const currentSemester = ref(null)
 
     const selectedCategory = ref('tasks')
 
@@ -55,8 +61,6 @@ export const useFpInstanceStore = defineStore('fpInstanceStore', () => {
         return Math.round((totalPointsAwarded.value / totalPointsPossible.value) * 100);
     })
 
-
-
     watch(selectedTask, (newValue) => {
         if (newValue) {
             showOverlay.value = true;
@@ -70,6 +74,7 @@ export const useFpInstanceStore = defineStore('fpInstanceStore', () => {
         }
     })
 
+    // this is actually for selected semester
     const setCurrentSemester = (semester) => {
         selectedSemester.value = semester;
     };
@@ -137,6 +142,33 @@ export const useFpInstanceStore = defineStore('fpInstanceStore', () => {
     });
 
 
+    function generateSemesters(graduationYear, graduationSemester) {
+        const semesters = [];
+        let currentYear = graduationYear;
+        let currentSemester = graduationSemester;
+
+        for (let i = 1; i <= 8; i++) {
+            const abbrev = currentSemester === "Fall" ? "FA" : "SP";
+            const shortYear = String(currentYear).slice(-2);
+
+            semesters.unshift({
+                semester: currentSemester,
+                year: currentYear,
+                label: `${abbrev}${shortYear}`,
+                semesterFromGraduation: i
+            });
+
+            // Go to previous semester
+            if (currentSemester.toLowerCase() === "spring") {
+                currentSemester = "Fall";
+                currentYear -= 1;
+            } else {
+                currentSemester = "Spring";
+            }
+        }
+
+        return semesters;
+    }
 
     // API calls ==================
 
@@ -153,6 +185,39 @@ export const useFpInstanceStore = defineStore('fpInstanceStore', () => {
         )
     }
 
+    studentServices.getForUserId(userId).then((response) => {
+        const graduationYear = response.data.graduationYear
+        const graduationSemester = response.data.graduationSemester
+        semesters.value = generateSemesters(graduationYear, graduationSemester)
+
+        // This ensures that the current semester is set after the semesters are generated, so we can show the current one
+        getCurrentSemester()
+    }
+    )
+
+    function getCurrentSemester() {
+        semesterServices.getCurrent().then(
+            response => {
+                currentSemester.value = response.data;
+
+                // Find the matching semester from the list
+                const match = semesters.value.find(sem =>
+                    sem.semester.toLowerCase() === currentSemester.value.season &&
+                    sem.year === currentSemester.value.year
+                );
+
+                if (match) {
+                    selectedSemester.value = match;
+                } else {
+                    console.warn("Current semester not found in list.");
+                }
+            }
+        ).catch(error => {
+            console.log("Error fetching current semester:", error);
+        });
+    }
+
+
     return {
         selectedSemester,
         selectedTask,
@@ -166,6 +231,8 @@ export const useFpInstanceStore = defineStore('fpInstanceStore', () => {
         totalPointsPossible,
         totalPointsAwarded,
         progress,
+        semesters,
+        currentSemester,
         getSemesterName,
         getAllforSemesterUntilGraduation,
         setCurrentSemester,

@@ -1,6 +1,6 @@
 <template>
     <v-card color="background" width="800px" height="400px" elevation=2>
-        <v-card-title class="d-flex justify-center align-center py-0 mt-1" style="width: 100%;font-size:140%;">
+        <v-card-title class="d-flex justify-center align-center py-0 mt-1" style="width: 100%;font-size:130%;">
             {{ title }}
         </v-card-title>
         <v-tabs v-model="fpInstanceStore.selectedCategory" bg-color="background" class="mb-0" height="35px">
@@ -10,13 +10,22 @@
         <v-container class="d-flex justify-center align-center px-0 pt-0 mx-0" height="85%" width="100%">
             <v-list bg-color="secondary" class="my-list px-1" style="overflow-y: auto;" width=100% height=98%
                 rounded-sm>
-                <v-card v-for="task in fpInstanceStore.filteredTasks" class="mb-3 clickable-card" color="background"
-                    elevation="4" hover ripple @click="fpInstanceStore.selectedTask = task">
+                <v-card v-for="task in fpInstanceStore.filteredTasks"
+                    :class="!task.isPostponed ? 'mb-3 clickable-card' : 'mb-3'"
+                    :color="!task.isPostponed ? 'background' : 'grey lighten-2'" elevation="4" hover ripple
+                    @click="!task.isPostponed ? fpInstanceStore.selectedTask = task : null">
                     <v-card-title class="d-flex justify-space-between align-center text-overline">
                         <span>{{ task.task.name }} ({{ task.task.points }} pts)</span>
-                        <v-btn color="primary" size="small" variant="text"> {{
-                            fpInstanceStore.getSubmissionStatus(task.submissions).text
-                            }}</v-btn>
+                        <v-card v-if="!task.isPostponed" color="primary" height="26px"
+                            class="d-flex justify-center align-center" variant="text">
+                            {{
+                                fpInstanceStore.getSubmissionStatus(task.submissions).text
+                            }}
+                        </v-card>
+                        <v-card v-else color="primary" height="26px" class="d-flex justify-center align-center"
+                            variant="text">
+                            📆 Postponed
+                        </v-card>
                     </v-card-title>
                 </v-card>
             </v-list>
@@ -33,7 +42,7 @@ const title = computed(() => {
     if (fpInstanceStore.selectedSemester == null) {
         return "\u00A0"
     }
-    return fpInstanceStore.selectedSemester.name
+    return fpInstanceStore.selectedSemester.label
 })
 
 </script>
