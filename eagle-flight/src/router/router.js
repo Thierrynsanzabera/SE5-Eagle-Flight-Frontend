@@ -14,6 +14,7 @@ import EditPlanView from '../views/EditPlanView.vue';
 import EventsPage from '../views/Events.vue'
 import SemesterView from '../views/SemesterView.vue';
 import SubmissionsView from "@/views/SubmissionsView.vue";
+import BadgeManageView from "@/views/BadgeView.vue";
 import ManageUserRoleView from "@/views/ManageUserRoleView.vue";
 
 const routes = [
@@ -27,6 +28,7 @@ const routes = [
   { path: '/manage-semesters', component: SemesterView },
   { path: '/submissions', component: SubmissionsView },
   { path: '/test', component: TestPage },
+  { path: '/manage-badges', name: "Manage Badges", component: BadgeManageView}
   { path: '/manage-roles', component: ManageUserRoleView }
 ];
 
