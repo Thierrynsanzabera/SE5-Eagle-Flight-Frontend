@@ -31,7 +31,6 @@
         </v-card>
     </v-overlay>
 
-    <v-card color="transparent" height="64"></v-card>
     <v-container class="d-flex justify-center align-center">
         <TaskList @task-selected="passToEdit" class="mx-3" />
         <TaskEditor :task="selectedTask" class="mx-3" />

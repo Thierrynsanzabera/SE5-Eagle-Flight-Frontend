@@ -5,7 +5,7 @@
     <v-overlay v-model="submissionStore.showSubmission" class="d-flex justify-center align-center" z-index="1">
         <ExpandedSubmission />
     </v-overlay>
-    <v-container style="margin-top:48px" class="d-flex justify-center align-center">
+    <v-container class="d-flex justify-center align-center">
         <SubmissionList/>
     </v-container>
 </template>

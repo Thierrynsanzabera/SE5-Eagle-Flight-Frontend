@@ -1,5 +1,4 @@
 <template>
-    <v-card color="transparent" height="64px"></v-card>
     <v-container class="d-flex justify-center">
         <v-card width="1600px" color="background" class="px-4" elevation="10">
             <v-row justify="center">

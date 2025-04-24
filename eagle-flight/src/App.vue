@@ -2,56 +2,72 @@
   <v-app>
     <div class="background">
       <div class="overlay-layer"></div> <!-- overlay layer -->
-      <v-app-bar color="primary">
-        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title class="header-title">Eagle Flight</v-toolbar-title>
+
+      <v-app-bar color="primary" class="px-3" height="40">
+        <div class="circle-button" @click="drawer = !drawer">
+          <v-icon size="24">mdi-menu</v-icon>
+        </div>
+        <v-toolbar-title class="header-title" style="max-width: 150px;cursor: pointer;" @click="navigate('')">
+          Eagle Flight
+        </v-toolbar-title>
+
         <v-spacer></v-spacer>
         <v-btn v-if="!isLogged" variant="plain" to="/login">Login</v-btn>
         <v-btn v-else variant="plain" @click="logoutUser">Logout</v-btn>
-        <div class="user-info">
-          <template v-if="isLoggedIn">
-            <!-- <div class="points-badge">
-            <div>Points: {{ user.points }}</div>
-            <div>Badge: {{ user.badge }}</div>
-          </div> -->
-            <v-text-field class="name-field" v-model="user.name" readonly></v-text-field>
-            <v-avatar size="48">
-              <img :src="user.avatar" alt="User avatar" />
-            </v-avatar>
-          </template>
-        </div>
+
       </v-app-bar>
-      <v-navigation-drawer v-model="drawer" :location="'left'">
+
+      <v-navigation-drawer temporary v-model="drawer" :location="'left'" class="auto-height-drawer" color="secondary">
         <v-list class="item">
-          <v-list-item @click="navigate('')">Home</v-list-item>
-          <v-list-item @click="navigate('account-information')">Account Information</v-list-item>
-          <v-list-item @click="navigate('point-shop')">Point Shop</v-list-item>
-          <v-list-item @click="navigate('')">Personality Test</v-list-item>
-          <v-list-item @click="navigate('')">Schedule a Meeting</v-list-item>
-          <v-list-item @click="navigate('')">Resume Builder</v-list-item>
-          <v-list-item @click="navigate('events')">Events</v-list-item>
+          <v-list-item v-for="page in displayedPages" :key="page.path" @click="navigate(page.path)">
+            {{ page.name }}
+          </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <router-view />
+      <v-container style="margin-top:40px;">
+        <router-view />
+      </v-container>
     </div>
   </v-app>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Utils from './config/utils'
 import userServices from './services/userServices';
+
+const pagesAdmin = [
+  { name: "Manage Semesters", path: "manage-semesters" },
+  { name: "Manage Flight Plans", path: "edit-plan" },
+  { name: "View Submissions", path: "submissions" },
+  { name: "Manage Point Shop", path: "point-shop" },
+  { name: "Manage Events", path: "events" },
+  { name: "Manage Users", path: "manage-users" },
+  { name: "Manage Majors", path: "manage-majors" },
+  { name: "Manage Badges", path: "manage-badges" }
+];
+
+const pagesStudent = [
+  { name: "Home", path: "" },
+  { name: "Account Information", path: "account-information" },
+  { name: "Point Shop", path: "point-shop" },
+  { name: "Resume Builder", path: "" },
+  { name: "Events", path: "events" },
+];
+
+const displayedPages = computed(() => (isAdmin.value ? pagesAdmin : pagesStudent));
+
 
 const router = useRouter();
 let drawer = ref(false); // Add this to control the drawer
 let isLogged = ref(Utils.isLogged());
 let user = Utils.getStore("user");
-let isAdmin = ref(false);
+let isAdmin = ref(true);
 
 if (user) {
   userServices.getUserForId(user.userId).then((res) => {
-    isAdmin.value = res.data.isAdmin;
+    // isAdmin.value = res.data.roleId == 2 ? true : false;
   }).catch((err) => {
     console.log(err);
   });
@@ -68,9 +84,37 @@ const navigate = (route) => {
 </script>
 
 <style scoped>
+.circle-button {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.circle-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.auto-height-drawer {
+  max-height: 300px !important;
+  top: 40px;
+  /* match your app-bar height */
+  border-radius: 0 0px 4px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.item {
+  border: 5px;
+}
+
 .header-title {
   text-align: center;
-  width: 100%;
+  font-family: "Rajdhani", sans-serif;
   color: white;
   position: absolute;
   left: 50%;
@@ -94,10 +138,6 @@ const navigate = (route) => {
 
 .drawer {
   padding-top: 60px;
-}
-
-.item {
-  border: 5px;
 }
 
 .background {

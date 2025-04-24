@@ -4,7 +4,6 @@
         <ExpandedEventsCombo />
     </v-overlay>
 
-    <v-card color="transparent" height="64"></v-card>
     <v-container>
         <v-switch
         v-model="showAdminView"

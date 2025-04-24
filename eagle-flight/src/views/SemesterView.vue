@@ -20,8 +20,6 @@
         </v-card>
     </v-overlay>
 
-    <v-card color="transparent" height="100px" flat></v-card>
-
     <v-container class="d-flex justify-center" height="450px">
         <v-card color="primary" width="600" height="420" class="pa-6">
             <v-card-title class="text-h4 text-center">Manage Semesters</v-card-title>
