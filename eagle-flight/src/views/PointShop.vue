@@ -1,114 +1,36 @@
 <template>
-  <v-container>
-    <!-- Header -->
-    <v-row justify="center" class="mt-10">
-      <v-col cols="12" class="text-center">
-        <h1>Point Shop</h1>
-      </v-col>
-    </v-row>
+  <v-container fluid class="d-flex flex-column align-center">
+    <v-card style="padding: 10px; margin: 10px;" color="transparent" variant="flat">
+      <v-row class="d-flex justify-center align-center">
+        <v-icon style="font-size: 160%;">mdi-basket</v-icon>
+        <v-card-title style="font-size: 140%;">Point Shop</v-card-title>
+      </v-row>
+    </v-card>
 
-    <!-- Total Points -->
-    <v-row justify="center">
-      <v-col cols="12" md="6">
-        <v-card>
-          <v-card-title class="headline text-center">
-            My Points: {{ totalPoints }}
-          </v-card-title>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-card variant="outlined" class="mb-2">
+      <v-card-title>
+        My Points: {{ totalPoints }}
+      </v-card-title>
+    </v-card>
+    <v-card height="500px" width="1100px">
+      <v-card-title class="bg-primary text-white d-flex justify-center align-center" style="height: 40px;">
+        All Rewards
+      </v-card-title>
 
-    <!-- Available Items -->
-    <v-row justify="center">
-      <v-col cols="12" md="8">
-        <v-card>
-          <v-card-title class="headline text-center">
-            Available Rewards
-          </v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col v-for="item in pointShopItems" :key="item.id" cols="12" md="4">
-                <v-card class="reward-item">
-                  <v-card-title class="reward-title">{{ item.name }}</v-card-title>
-                  <v-card-text>
-                    <p class="points-text">{{ item.points }} points</p>
-                    <!-- Conditionally hide the Redeem button when adminView is true -->
-                    <v-btn v-if="!adminView" :color="item.isWaitingApproval ? 'grey' : 'primary'"
-                      :disabled="item.isWaitingApproval || item.points > totalPoints" @click="redeemItem(item)">
-                      {{ item.isWaitingApproval ? 'Waiting for Approval' : 'Redeem' }}
-                    </v-btn>
-
-                    <!-- Admin Action Buttons (Edit/Delete) -->
-                    <v-btn v-if="adminView" color="orange" @click="openEditDialog(item)">Edit</v-btn>
-                    <v-btn v-if="adminView" color="red" @click="deleteItem(item.id)">Delete</v-btn>
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <!-- Redemption History Button (Visible for Admin and Students) -->
-    <v-row justify="center" class="mt-4">
-      <v-col cols="12" md="8">
-        <v-btn color="secondary" @click="openHistoryDialog">
+      <v-container fluid style="height: 400px; overflow-y: auto;">
+        <v-row class="ma-0">
+          <v-col v-for="item in pointShopItems" :key="item.id" cols="12" sm="6" md="4" lg="3"
+            class="pa-2 d-flex justify-center">
+            <RedeemableCardUser :item="item" :redeemable="false" @edit="handleEdit(item)" @delete="handleDelete(item)" />
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-card width="100%" height="60px" color="primary" class="d-flex justify-center align-center">
+        <v-btn color="white" @click="createRedeemableDialog = true" variant="text" size="large" width="60%">
           View Redemption History
         </v-btn>
-      </v-col>
-    </v-row>
-
-    <!-- Admin Section - Only visible if adminView is true -->
-    <v-row justify="center" class="mt-4" v-if="adminView">
-      <v-col cols="12" md="8">
-        <v-card>
-          <v-card-title class="headline text-center">
-            Admin Actions
-          </v-card-title>
-          <v-card-text>
-            <v-btn color="primary" @click="openCreateRedeemableDialog">Create Redeemable Item</v-btn>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <!-- Edit Redeemable Item Dialog (Admin only) -->
-    <v-dialog v-model="editRedeemableDialog" max-width="600">
-      <v-card>
-        <v-card-title class="headline">Edit Redeemable Item</v-card-title>
-        <v-card-text>
-          <v-form v-model="formValid">
-            <v-text-field v-model="editedRedeemable.name" label="Item Name" required></v-text-field>
-            <v-text-field v-model="editedRedeemable.points" label="Points Required" type="number"
-              required></v-text-field>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn text @click="closeEditDialog">Cancel</v-btn>
-          <v-btn color="primary" :disabled="!formValid" @click="updateRedeemableItem">Update</v-btn>
-        </v-card-actions>
       </v-card>
-    </v-dialog>
-
-    <!-- Create Redeemable Item Dialog (Admin only) -->
-    <v-dialog v-model="createRedeemableDialog" max-width="600">
-      <v-card>
-        <v-card-title class="headline">Create Redeemable Item</v-card-title>
-        <v-card-text>
-          <v-form v-model="formValid">
-            <v-text-field v-model="newRedeemable.name" label="Item Name" required></v-text-field>
-            <v-text-field v-model="newRedeemable.points" label="Points Required" type="number" required></v-text-field>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn text @click="closeCreateRedeemableDialog">Cancel</v-btn>
-          <v-btn color="primary" :disabled="!formValid" @click="createRedeemableItem">Create</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    </v-card>
 
     <!-- Redemption History Dialog -->
     <v-dialog v-model="historyDialog" max-width="800">
@@ -151,23 +73,6 @@ let pointShopItems = ref([]);  // List of available items for redemption
 let totalPoints = ref(0);      // Student's current total points
 let redemptionHistory = ref([]); // Redemption history for the student
 let historyDialog = ref(false); // Controls the visibility of the history dialog
-
-// Admin-specific dialog and form data
-let adminView = ref(false);  // Manually set adminView to true (admin mode) or false (student mode)
-let createRedeemableDialog = ref(false);
-let newRedeemable = ref({
-  name: '',
-  points: 0,
-});
-
-let editRedeemableDialog = ref(false);
-let editedRedeemable = ref({
-  id: null,
-  name: '',
-  points: 0,
-});
-
-let formValid = ref(false);
 
 // Load current student points from the backend
 function loadStudentPoints() {
