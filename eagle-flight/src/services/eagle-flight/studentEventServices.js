@@ -15,5 +15,8 @@ export default {
     },
     deleteStudentFromEvent(eventId, studentUserID) {
         return apiClient.delete(`/studentEvent/${eventId}/${studentUserID}`);
-    }
+    },
+    getAllEvents() {
+        return apiClient.get("/event");
+    },
 };

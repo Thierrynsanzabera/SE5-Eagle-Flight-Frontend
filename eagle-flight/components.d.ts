@@ -26,6 +26,7 @@ declare module 'vue' {
     FlightPlanSemesterCard: typeof import('./src/components/fp_components/FlightPlanSemesterCard.vue')['default']
     FpManager: typeof import('./src/components/fp_edit_components/FpManager.vue')['default']
     IconRow: typeof import('./src/components/IconRow.vue')['default']
+    MonthlyCalendar: typeof import('./src/components/event_components/MonthlyCalendar.vue')['default']
     Resume: typeof import('./src/components/Resume.vue')['default']
     ResumePreview: typeof import('./src/components/ResumePreview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
@@ -33,10 +34,13 @@ declare module 'vue' {
     SemesterIcon: typeof import('./src/components/fp_edit_components/SemesterIcon.vue')['default']
     SocialLogin: typeof import('./src/components/SocialLogin.vue')['default']
     StudentAddDialog: typeof import('./src/components/event_components/StudentAddDialog.vue')['default']
+    StudentEventCalendar: typeof import('./src/components/event_components/StudentEventCalendar.vue')['default']
+    StudentViewEvent: typeof import('./src/components/event_components/StudentViewEvent.vue')['default']
     TaskEditor: typeof import('./src/components/fp_edit_components/TaskEditor.vue')['default']
     TaskList: typeof import('./src/components/fp_edit_components/TaskList.vue')['default']
     TemplatePicker: typeof import('./src/components/TemplatePicker.vue')['default']
     TimeSelector: typeof import('./src/components/fp_edit_components/TimeSelector.vue')['default']
+    WeeklyCalendar: typeof import('./src/components/event_components/WeeklyCalendar.vue')['default']
     YearIcon: typeof import('./src/components/fp_edit_components/YearIcon.vue')['default']
   }
 }
