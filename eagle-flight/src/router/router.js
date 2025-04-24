@@ -14,6 +14,7 @@ import EditPlanView from '../views/EditPlanView.vue';
 import EventsPage from '../views/Events.vue'
 import SemesterView from '../views/SemesterView.vue';
 import SubmissionsView from "@/views/SubmissionsView.vue";
+import BadgeManageView from "@/views/BadgeView.vue";
 
 const routes = [
   { path: '/', alias: "/home", name: "home", component: HomeView },
@@ -25,7 +26,8 @@ const routes = [
   { path: '/events', component: EventsPage },
   { path: '/manage-semesters', component: SemesterView },
   { path: '/submissions', component: SubmissionsView },
-  { path: '/test', component: TestPage }
+  { path: '/test', component: TestPage },
+  { path: '/manage-badges', name: "Manage Badges", component: BadgeManageView}
 ];
 
 const router = createRouter({

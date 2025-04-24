@@ -12,6 +12,8 @@ declare module 'vue' {
     AddExperience: typeof import('./src/components/builder_components/AddExperience.vue')['default']
     AddProject: typeof import('./src/components/builder_components/AddProject.vue')['default']
     AddSkill: typeof import('./src/components/builder_components/AddSkill.vue')['default']
+    BadgeEditor: typeof import('./src/components/badge_components/BadgeEditor.vue')['default']
+    BadgeList: typeof import('./src/components/badge_components/BadgeList.vue')['default']
     BadgePopUp: typeof import('./src/components/fp_components/BadgePopUp.vue')['default']
     CustomButton: typeof import('./src/components/fp_components/CustomButton.vue')['default']
     CustomDatePicker: typeof import('./src/components/CustomDatePicker.vue')['default']
