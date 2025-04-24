@@ -34,6 +34,8 @@ declare module 'vue' {
     MonthlyCalendar: typeof import('./src/components/event_components/MonthlyCalendar.vue')['default']
     NewTemplateOverlay: typeof import('./src/components/fp_edit_components/NewTemplateOverlay.vue')['default']
     PreviewImage: typeof import('./src/components/submissionview-components/PreviewImage.vue')['default']
+    RedeemableCard: typeof import('./src/components/point-shop-components/RedeemableCard.vue')['default']
+    RedeemableCardUser: typeof import('./src/components/point-shop-components/RedeemableCardUser.vue')['default']
     Resume: typeof import('./src/components/Resume.vue')['default']
     ResumePreview: typeof import('./src/components/ResumePreview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
