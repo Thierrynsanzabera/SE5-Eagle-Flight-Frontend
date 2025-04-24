@@ -63,11 +63,11 @@ const router = useRouter();
 let drawer = ref(false); // Add this to control the drawer
 let isLogged = ref(Utils.isLogged());
 let user = Utils.getStore("user");
-let isAdmin = ref(true);
+let isAdmin = ref(false);
 
 if (user) {
   userServices.getUserForId(user.userId).then((res) => {
-    // isAdmin.value = res.data.roleId == 2 ? true : false;
+    isAdmin.value = res.data.roleId == 2 ? true : false;
   }).catch((err) => {
     console.log(err);
   });
