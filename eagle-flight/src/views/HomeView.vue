@@ -6,7 +6,6 @@
             <ExpandedTask />
         </v-overlay>
 
-        <v-card color="transparent" height="64px"></v-card>
         <v-card style="padding: 10px; margin: 10px;" color="transparent" variant="flat">
             <v-row class="d-flex justify-center align-center">
                 <v-icon style="font-size: 160%;">mdi-send-variant</v-icon>
