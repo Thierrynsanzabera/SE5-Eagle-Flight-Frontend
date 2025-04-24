@@ -27,6 +27,7 @@
         <v-list-item @click="navigate('')">Personality Test</v-list-item>
         <v-list-item @click="navigate('')">Schedule a Meeting</v-list-item>
         <v-list-item @click="navigate('')">Resume Builder</v-list-item>
+        <v-list-item @click="navigate('events')">Events</v-list-item>
       </v-list>
     </v-navigation-drawer>
     <router-view />

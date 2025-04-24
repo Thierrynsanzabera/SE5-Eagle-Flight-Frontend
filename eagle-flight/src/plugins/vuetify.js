@@ -11,6 +11,10 @@ import 'vuetify/styles'
 // Composables
 import { createVuetify } from 'vuetify'
 
+// Date and Time Pickers
+import { VDateInput } from 'vuetify/labs/VDateInput'
+import { VTimePicker } from 'vuetify/labs/VTimePicker'
+
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 const customTheme = {
   dark: false,
@@ -34,4 +38,8 @@ export default createVuetify({
       customTheme,
     },
   },
+  components: {
+    VDateInput,
+    VTimePicker
+  }
 })
