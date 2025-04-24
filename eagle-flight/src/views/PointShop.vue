@@ -33,8 +33,9 @@
                   <v-card-text>
                     <p class="points-text">{{ item.points }} points</p>
                     <!-- Conditionally hide the Redeem button when adminView is true -->
-                    <v-btn v-if="!adminView" color="primary" @click="redeemItem(item)" :disabled="item.points > totalPoints">
-                      Redeem
+                    <v-btn v-if="!adminView" :color="item.isWaitingApproval ? 'grey' : 'primary'"
+                      :disabled="item.isWaitingApproval || item.points > totalPoints" @click="redeemItem(item)">
+                      {{ item.isWaitingApproval ? 'Waiting for Approval' : 'Redeem' }}
                     </v-btn>
 
                     <!-- Admin Action Buttons (Edit/Delete) -->
@@ -79,7 +80,8 @@
         <v-card-text>
           <v-form v-model="formValid">
             <v-text-field v-model="editedRedeemable.name" label="Item Name" required></v-text-field>
-            <v-text-field v-model="editedRedeemable.points" label="Points Required" type="number" required></v-text-field>
+            <v-text-field v-model="editedRedeemable.points" label="Points Required" type="number"
+              required></v-text-field>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -200,6 +202,12 @@ function redeemItem(item) {
       .then(() => {
         totalPoints.value -= item.points;  // Subtract redeemed points
         alert(`You redeemed ${item.name} for ${item.points} points!`);
+
+        // 🔧 Set the flag locally so UI updates immediately
+        const targetItem = pointShopItems.value.find(i => i.id === item.id);
+        if (targetItem) {
+          targetItem.isWaitingApproval = true;
+        }
       })
       .catch(error => {
         console.error("Error redeeming item:", error);
@@ -210,30 +218,41 @@ function redeemItem(item) {
 }
 
 // Fetch redemption history
-function loadRedemptions() {
-  studentRedeemableServices.getByStudent(userId)
-    .then(response => {
-      const redemptionData = response.data;
-      redemptionHistory.value = [];
+async function loadRedemptions() {
+  try {
+    const response = await studentRedeemableServices.getByStudent(userId);
+    const redemptionData = response.data;
 
-      redemptionData.forEach(entry => {
-        redeemableServices.getOne(entry.redeemableId)
-          .then(redeemableResponse => {
-            const redeemableDetails = redeemableResponse.data;
-            // Add redeemable item details to each redemption entry
-            entry.redeemableName = redeemableDetails.name;
-            entry.redeemablePoints = redeemableDetails.points;
-            entry.redeemDate = entry.redeemDate;
-            redemptionHistory.value.push(entry); // Add the entry to the history
-          })
-          .catch(error => {
-            console.error("Error fetching redeemable details:", error);
-          });
-      });
-    })
-    .catch(error => {
-      console.error("Error fetching redemption history:", error);
-    });
+    // Wait for all redeemable lookups to complete
+    const enrichedRedemptions = await Promise.all(
+      redemptionData.map(async entry => {
+        try {
+          const redeemableResponse = await redeemableServices.getOne(entry.redeemableId);
+          const redeemableDetails = redeemableResponse.data;
+
+          // Update the "waiting for approval" flag
+          const targetItem = pointShopItems.value.find(i => i.id === entry.redeemableId);
+          if (targetItem && entry.isApproved === false) {
+            targetItem.isWaitingApproval = true;
+          }
+
+          return {
+            ...entry,
+            redeemableName: redeemableDetails.name,
+            redeemablePoints: redeemableDetails.points,
+            redeemDate: entry.redeemDate,
+          };
+        } catch (err) {
+          console.error("Error fetching redeemable details:", err);
+          return entry;
+        }
+      })
+    );
+
+    redemptionHistory.value = enrichedRedemptions;
+  } catch (error) {
+    console.error("Error fetching redemption history:", error);
+  }
 }
 
 function openHistoryDialog() {
@@ -312,9 +331,10 @@ function createRedeemableItem() {
 }
 
 // Fetch the data when the component is mounted
-onMounted(() => {
-  loadItems();  // Load the available rewards
-  loadStudentPoints();  // Load the student's total points
+onMounted(async () => {
+  await loadItems();
+  await loadRedemptions();
+  loadStudentPoints();
 });
 </script>
 
@@ -343,7 +363,7 @@ onMounted(() => {
 }
 
 .points-text {
-  color: black;  /* Change the color to black for the points text */
+  color: black;
+  /* Change the color to black for the points text */
 }
-
 </style>
