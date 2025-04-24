@@ -9,6 +9,7 @@ import LoginView from "../views/LoginView.vue";
 // import AdminView from "@/views/AdminView.vue";
 import AccountInformation from '../views/AccountInformation.vue';
 import PointShop from '../views/PointShop.vue';
+import AdminPointShopView from "@/views/AdminPointShopView.vue";
 import StudentSetup from "@/views/StudentSetup.vue";
 import EditPlanView from '../views/EditPlanView.vue';
 import EventsPage from '../views/Events.vue'
@@ -19,6 +20,7 @@ const routes = [
   { path: '/', alias: "/home", name: "home", component: HomeView },
   { path: '/account-information', component: AccountInformation },
   { path: '/point-shop', component: PointShop },
+  { path: '/admin-point-shop', component: AdminPointShopView },
   { path: '/login', component: LoginView },
   { path: '/student-setup', name: "studentSetup", component: StudentSetup },
   { path: '/edit-plan', component: EditPlanView },

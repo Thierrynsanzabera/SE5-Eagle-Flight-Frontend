@@ -41,7 +41,7 @@ const pagesAdmin = [
   { name: "Manage Semesters", path: "manage-semesters" },
   { name: "Manage Flight Plans", path: "edit-plan" },
   { name: "View Submissions", path: "submissions" },
-  { name: "Manage Point Shop", path: "point-shop" },
+  { name: "Manage Point Shop", path: "admin-point-shop" },
   { name: "Manage Events", path: "events" },
   { name: "Manage Users", path: "manage-users" },
   { name: "Manage Majors", path: "manage-majors" },
