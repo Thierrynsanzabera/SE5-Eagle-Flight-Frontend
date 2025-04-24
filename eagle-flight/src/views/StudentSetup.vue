@@ -3,7 +3,7 @@
     <v-container class="d-flex justify-center">
         <v-card width="1600px" color="background" class="px-4" elevation="10">
             <v-card-title class="text-h4 text-center">Hello {{ studentBody.fName }} {{ studentBody.lName
-            }}</v-card-title>
+                }}</v-card-title>
             <v-card-title class="text-body-2 text-center mt-0 mb-4">Let's get your account set up</v-card-title>
 
             <v-form ref="form" v-model="formIsValid">
@@ -77,6 +77,7 @@ import Utils from '@/config/utils';
 import userServices from '@/services/userServices';
 import majorServices from '@/services/eagle-flight/majorServices'
 import studentServices from '@/services/eagle-flight/studentServices'
+import planServices from '@/services/eagle-flight/planServices';
 
 
 const router = useRouter();
@@ -119,7 +120,7 @@ let studentBody = ref({
     lName: "",
     ocId: "",
     majorId: "",
-    points : "",
+    points: "",
     enrollmentYear: "",
     enrollmentSemester: "",
     graduationYear: "",
@@ -161,13 +162,21 @@ function getMajors() {
 const form = ref(null)
 const formIsValid = ref(false)
 
-function saveAndGoHome() {
-    if (form.value?.validate()) {
-        studentServices.addStudent(studentBody.value).then(() => {
-            router.push({ name: "home" });
-        }).catch(error => {
-            console.log(error);
-        });
+async function saveAndGoHome() {
+    if (!(await form.value?.validate())) {
+        console.log("Form is not valid");
+        return;
+    }
+    try {
+        await studentServices.addStudent(studentBody.value)
+        await planServices.startInstance(userId)
+        await planServices.populateInstance(userId)
+
+        router.push({ name: "home" });
+        return;
+    }
+    catch (error) {
+        console.error("Error saving student data:", error);
     }
 }
 </script>

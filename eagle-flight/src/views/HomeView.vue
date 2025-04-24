@@ -1,4 +1,8 @@
 <template>
+    <v-overlay v-model="fpInstanceStore.showOverlay" class="d-flex justify-center align-center" z-index="1">
+        <ExpandedTask />
+    </v-overlay>
+
     <v-card color="transparent" height="64px"></v-card>
     <v-card style="padding: 10px; margin: 10px;" color="transparent" variant="flat">
         <v-row class="d-flex justify-center align-center">
@@ -11,5 +15,10 @@
     </v-container>
 </template>
 
-<script setup></script>
+<script setup>
+import { useFpInstanceStore } from '@/store/instanceFpStore';
+
+const fpInstanceStore = useFpInstanceStore()
+
+</script>
 <style scoped></style>

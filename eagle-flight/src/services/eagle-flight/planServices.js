@@ -1,10 +1,13 @@
 import apiClient from "../services.js";
 
 export default {
-  getForMajorId(majorId) {
-    return apiClient.get(`/plan/major/${majorId}`);
+  getAll() {
+    return apiClient.get("/plan");
   },
-  addplan(data){
+  getForId(planId) {
+    return apiClient.get(`/plan/${planId}`);
+  },
+  addplan(data) {
     return apiClient.post("/plan", data);
   },
   update(planId, data) {
@@ -22,4 +25,13 @@ export default {
   deleteAll() {
     return apiClient.delete(`/plan`);
   },
+  deleteAllInPlan(planId) {
+    return apiClient.delete(`/plan/${planId}/tasks`);
+  },
+  startInstance(userId) {
+    return apiClient.post(`/plan/plan-instance/start/${userId}`);
+  },
+  populateInstance(userId) {
+    return apiClient.post(`/plan/plan-instance/populate/${userId}`);
+  }
 };

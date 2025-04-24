@@ -12,21 +12,24 @@ import PointShop from '../views/PointShop.vue';
 import StudentSetup from "@/views/StudentSetup.vue";
 import EditPlanView from '../views/EditPlanView.vue';
 import EventsPage from '../views/Events.vue'
-
+import SemesterView from '../views/SemesterView.vue';
+import SubmissionsView from "@/views/SubmissionsView.vue";
 
 const routes = [
   { path: '/', alias: "/home", name: "home", component: HomeView },
   { path: '/account-information', component: AccountInformation },
   { path: '/point-shop', component: PointShop },
   { path: '/login', component: LoginView },
-  { path: '/student-setup', name:"studentSetup", component: StudentSetup },
+  { path: '/student-setup', name: "studentSetup", component: StudentSetup },
   { path: '/edit-plan', component: EditPlanView },
-  { path: '/test', component: TestPage },
   { path: '/events', component: EventsPage },
+  { path: '/manage-semesters', component: SemesterView },
+  { path: '/submissions', component: SubmissionsView },
+  { path: '/test', component: TestPage }
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 });
 
