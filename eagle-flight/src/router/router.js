@@ -28,7 +28,7 @@ const routes = [
   { path: '/manage-semesters', component: SemesterView },
   { path: '/submissions', component: SubmissionsView },
   { path: '/test', component: TestPage },
-  { path: '/manage-badges', name: "Manage Badges", component: BadgeManageView}
+  { path: '/manage-badges', name: "Manage Badges", component: BadgeManageView},
   { path: '/manage-roles', component: ManageUserRoleView }
 ];
 
