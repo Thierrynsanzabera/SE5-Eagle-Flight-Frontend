@@ -81,55 +81,7 @@
             <v-row>
                 <v-col>
                     <v-card color="transparent" elevation="8" class="px-4">
-                        <v-card-title>Badges</v-card-title>
-                        <v-list>
-                        <v-list-item
-                            v-for="(badge, index) in limitedBadges"
-                            :key="badge.id"
-                            class="py-1 badge-list-item"
-                        >
-                            <v-list-item-avatar size="40">
-                            <v-img :src="badge.imagePath" alt="Badge Image"></v-img>
-                            </v-list-item-avatar>
-                            <v-list-item-content>
-                            <v-list-item-title class="text-body-1">{{ badge.name }}</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                        </v-list>
-                        <v-row justify="end">
-                        <v-col class="mt-1 d-flex justify-center">
-                            <v-btn color="primary" @click="showAllBadges = true">View All</v-btn>
-                        </v-col>
-                        </v-row>
-
-                        <!-- View All Dialog -->
-                        <v-dialog v-model="showAllBadges" max-width="800px">
-                        <v-card>
-                            <v-card-title class="d-flex justify-space-between">
-                            <span>All Badges</span>
-                            <v-btn icon @click="showAllBadges = false">
-                                <v-icon>mdi-close</v-icon>
-                            </v-btn>
-                            </v-card-title>
-                            <v-divider></v-divider>
-                            <v-list>
-                            <v-list-item
-                                v-for="badge in badges"
-                                :key="badge.id"
-                                class="py-2"
-                            >
-                                <v-list-item-avatar size="40">
-                                <v-img :src="badge.imagePath" alt="Badge Image"></v-img>
-                                </v-list-item-avatar>
-                                <v-list-item-content>
-                                <v-list-item-title>{{ badge.name }}</v-list-item-title>
-                                <v-list-item-subtitle>{{ badge.description }}</v-list-item-subtitle>
-                                </v-list-item-content>
-                            </v-list-item>
-                            </v-list>
-                        </v-card>
-                        </v-dialog>
-
+                        <student-badge-section />
                     </v-card>
                 </v-col>
                 <v-col>
@@ -192,7 +144,7 @@ import { ref, computed } from 'vue';
 import Utils from '@/config/utils';
 import userServices from '@/services/userServices';
 import badgeServices from '@/services/badgeServices';
-
+import StudentBadgeSection from '@/components/badge_components/StudentBadgeSection.vue';
 
 let user = Utils.getStore("user");
 let userId = user.userId;

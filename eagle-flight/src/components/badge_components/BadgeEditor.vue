@@ -1,31 +1,40 @@
 <template>
-  <v-dialog :model-value="modelValue" @update:modelValue="emit('update:modelValue', $event)" max-width="600px">
-    <v-card>
-      <v-card-title>{{ selectedBadge ? 'Edit Badge' : 'Add New Badge' }}</v-card-title>
-      <v-card-text>
-        <v-text-field variant="outlined" v-model="badge.name" :label="badgeName" :error="!badge.name.trim()"></v-text-field>
-        <v-textarea variant="outlined" v-model="badge.description" label="Description"></v-textarea>
-        <v-file-input 
-          clearable
-          variant="outlined"
-          label="Badge Image"
-          v-model="imageFile"
-          accept="image/*"
-          :rules="[ file => !file || file.type.startsWith('image/') || 'This is not an image file. Please select an image file.']"
-          show-size
-          counter
-          @change="handleImageUpload"
-        />
-        <div v-if="previewImage || badge.imagePath">
-          <v-img :src="previewImage || badge.imagePath" max-height="200" class="my-2"></v-img>
-        </div>
-      </v-card-text>
-      <v-card-actions class="justify-center">
-        <v-btn color="error" @click="closeDialog">Cancel</v-btn>
-        <v-btn color="green" :disabled="!canSave" @click="saveBadge">{{ selectedBadge ? 'Update' : 'Create' }}</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-card class="pa-4">
+    <v-card-title>{{ selectedBadge ? 'Edit Badge' : 'Add New Badge' }}</v-card-title>
+
+    <v-card-text>
+      <v-text-field variant="outlined" v-model="badge.name" :label="badgeName" :error="!badge.name.trim()" />
+      <v-textarea variant="outlined" v-model="badge.description" label="Description" />
+      <v-file-input 
+        clearable
+        variant="outlined"
+        label="Badge Image"
+        v-model="imageFile"
+        accept="image/*"
+        :rules="[ file => !file || file.type.startsWith('image/') || 'This is not an image file. Please select an image file.']"
+        show-size
+        counter
+        @change="handleImageUpload"
+      />
+
+      <div v-if="previewImage || badge.imagePath">
+        <v-img :src="previewImage || badge.imagePath" max-height="200" class="my-2" />
+      </div>
+
+      <v-alert
+        v-if="showSuccess"
+        type="success"
+        class="mt-3 fade-alert"
+      >
+        Badge {{ selectedBadge ? 'updated' : 'created' }} successfully!
+      </v-alert>
+    </v-card-text>
+
+    <v-card-actions class="justify-center">
+      <v-btn color="error" @click="resetForm">Clear</v-btn>
+      <v-btn color="green" :disabled="!canSave" @click="saveBadge">{{ selectedBadge ? 'Update' : 'Create' }}</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script setup>
@@ -33,38 +42,31 @@ import { ref, watch, computed } from 'vue';
 import badgeServices from '@/services/eagle-flight/badgeServices';
 
 const props = defineProps({
-  modelValue: Boolean,
   selectedBadge: Object
 });
 
-const emit = defineEmits(['update:modelValue', 'refresh']);
+const emit = defineEmits(['refresh']);
 const badge = ref({ name: '', description: '', imagePath: '' });
 const imageFile = ref(null);
 const previewImage = ref(null);
+const showSuccess = ref(false);
 
-const badgeName = computed (() => 
+const badgeName = computed(() =>
   badge.value.name.trim()
     ? 'Badge Name'
     : '* Badge Name *'
-)
+);
 
 function resetForm() {
   if (props.selectedBadge) {
-    badge.value        = { ...props.selectedBadge }
-    previewImage.value = props.selectedBadge.imagePath || null
+    badge.value        = { ...props.selectedBadge };
+    previewImage.value = props.selectedBadge.imagePath || null;
   } else {
-    badge.value        = { name: '', description: '', imagePath: '' }
-    previewImage.value = null
+    badge.value        = { name: '', description: '', imagePath: '' };
+    previewImage.value = null;
   }
-  imageFile.value = null
+  imageFile.value = null;
 }
-
-watch(
-  () => props.modelValue,
-  isOpen => {
-    if (isOpen) resetForm()
-  }
-)
 
 watch(() => props.selectedBadge, (newVal) => {
   badge.value = newVal ? { ...newVal } : { name: '', description: '' };
@@ -76,18 +78,14 @@ watch(() => props.selectedBadge, (newVal) => {
 });
 
 const canSave = computed(() => {
-  const hasName = badge.value.name.trim().length > 0
-  const validImage = !imageFile.value || imageFile.value.type.startsWith('image/')
-  return hasName && validImage
-})
+  const hasName = badge.value.name.trim().length > 0;
+  const validImage = !imageFile.value || imageFile.value.type.startsWith('image/');
+  return hasName && validImage;
+});
 
 function handleImageUpload(file) {
   imageFile.value = file.target.files[0];
   previewImage.value = URL.createObjectURL(imageFile.value);
-}
-
-function closeDialog() {
-  emit('update:modelValue', false);
 }
 
 async function saveBadge() {
@@ -103,13 +101,22 @@ async function saveBadge() {
       await badgeServices.createBadge(formData);
     }
     emit('refresh');
-    closeDialog();
-    imageFile.value = null;
-    previewImage.value = null;
+    resetForm();
+    showSuccess.value = true;
+    setTimeout(() => showSuccess.value = false, 5000);
   } catch (error) {
     console.error('Error saving badge:', error);
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.fade-alert {
+  animation: flash 1s ease-in-out infinite alternate;
+}
+
+@keyframes flash {
+  from { opacity: 1; }
+  to { opacity: 0.5; }
+}
+</style>
