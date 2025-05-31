@@ -55,7 +55,8 @@ const pagesStudent = [
   { name: "Point Shop", path: "point-shop" },
   { name: "Resume Builder", path: "" },
   { name: "Events", path: "events" },
-  { name: "Manage Badges", path: "manage-badges" }
+  { name: "Manage Badges", path: "manage-badges" },
+  { name: "Manage Majors", path: "manage-majors" }
 ];
 
 const displayedPages = computed(() => (isAdmin.value ? pagesAdmin : pagesStudent));
@@ -103,7 +104,7 @@ const navigate = (route) => {
 }
 
 .auto-height-drawer {
-  max-height: 305px !important;
+  max-height: 355px !important;
   top: 40px;
   /* match your app-bar height */
   border-radius: 0 0px 4px 0;

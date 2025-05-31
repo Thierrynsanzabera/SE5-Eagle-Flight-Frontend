@@ -16,6 +16,7 @@ import SemesterView from '../views/SemesterView.vue';
 import SubmissionsView from "@/views/SubmissionsView.vue";
 import BadgeManageView from "@/views/BadgeView.vue";
 import ManageUserRoleView from "@/views/ManageUserRoleView.vue";
+import ManageMajors from "@/views/MaintainMajors.vue"
 
 const routes = [
   { path: '/', alias: "/home", name: "home", component: HomeView },
@@ -29,7 +30,8 @@ const routes = [
   { path: '/submissions', component: SubmissionsView },
   { path: '/test', component: TestPage },
   { path: '/manage-badges', name: "Manage Badges", component: BadgeManageView},
-  { path: '/manage-roles', component: ManageUserRoleView }
+  { path: '/manage-roles', component: ManageUserRoleView },
+  { path: '/manage-majors', component: ManageMajors }
 ];
 
 const router = createRouter({
