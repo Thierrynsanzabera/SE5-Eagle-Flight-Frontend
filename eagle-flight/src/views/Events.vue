@@ -12,17 +12,11 @@
         hide-details
         class="d-flex justify-center align-center"
         />
-        <div v-if="showAdminView">
-            <v-row>
-                <v-col cols="3">
-                    <div v-if="selectedEvent">
-                        <EventStudents :event-id="selectedEvent.id" />
-                    </div>
-                </v-col>
-                <v-col cols="6">
-                    <EventList @event-selected="passToEdit" class="mx-3" />
-                </v-col>
-            </v-row>
+        <div class="d-flex" v-if="showAdminView">
+                <div class="width justify-left" v-if="selectedEvent">
+                    <EventStudents :event-id="selectedEvent.id" />
+                </div>
+            <EventList @event-selected="passToEdit" class="mx-3 width justify-center" />
         </div>
         <div v-else>
             <StudentEventCalendar />
@@ -50,3 +44,10 @@ function passToEdit(event) {
     selectedEvent.value = event;
 }
 </script>
+
+<style>
+.width{
+    width: 400px;
+    max-width: 400px;
+}
+</style>

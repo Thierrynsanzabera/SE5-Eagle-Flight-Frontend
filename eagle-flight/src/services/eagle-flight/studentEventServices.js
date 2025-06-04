@@ -13,8 +13,12 @@ export default {
     updateStudentStatus(eventId, studentUserID, data) {
         return apiClient.put(`/studentEvent/${eventId}/${studentUserID}`, data);
     },
-    deleteStudentFromEvent(eventId, studentUserID) {
-        return apiClient.delete(`/studentEvent/${eventId}/${studentUserID}`);
+    deleteStudentFromEvent(eventId, studentUserID, studentOCID) {
+    return apiClient.post("/studentEvent/delete", {
+        eventId,
+        studentUserID,
+        studentOCID
+        });
     },
     getAllEvents() {
         return apiClient.get("/event");

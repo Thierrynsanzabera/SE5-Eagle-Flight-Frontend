@@ -83,7 +83,7 @@ function fetchStudents() {
         students.value = res.data.map(s => ({
             studentUserID: s.userId,
             ocId: s.ocId,
-            fullName: `${s.fName ?? 'FirstName'} ${s.lName ?? 'LastName'}`, 
+            fullName: s.fName && s.lName ? `${s.fName} ${s.lName}` : 'Name Missing',
             status: s.status === 1
         }));
     }).catch(err => {
@@ -91,7 +91,6 @@ function fetchStudents() {
     });
 }
 
-// Add Student Dialog
 const showAddDialog = ref(false)
 
 function handleStudentAdded(student) {
@@ -99,13 +98,20 @@ function handleStudentAdded(student) {
         eventID: props.eventId,
         studentUserID: student.studentUserID,
         studentOCID: student.studentOCID,
+        fName: student.fName,
+        lName: student.lName,
         status: student.status
     })
     .then(() => {
         fetchStudents();
     })
     .catch(err => {
-        console.error("Error adding student to event:", err);
+        if (err.response && err.response.status === 409) {
+            alert(`OC ID: ${student.studentOCID} is already in the list.`);
+        } else {
+            console.error("Error adding student to event:", err);
+            alert("Failed to add student.");
+        }
     });
 }
 
@@ -132,7 +138,11 @@ const filteredStudents = computed(() => {
 
 function removeStudent(student) {
     if (confirm(`Are you sure you want to remove ${student.fullName} from this event?`)) {
-        studentEventServices.deleteStudentFromEvent(props.eventId, student.studentUserID)
+        studentEventServices.deleteStudentFromEvent(
+                props.eventId,
+                student.studentUserID,
+                student.ocId
+            )
             .then(() => {
                 console.log("Student removed successfully.");
                 fetchStudents();
