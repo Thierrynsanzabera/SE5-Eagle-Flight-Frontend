@@ -6,5 +6,8 @@ export default {
     },
     update(instanceTaskId, data) {
         return apiClient.put(`/instanceTask/${instanceTaskId}`, data);
+    },
+    syncForPlan(planId) {
+        return apiClient.post(`/instanceTask/syncForPlan`, { planId });
     }
 };

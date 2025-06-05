@@ -44,18 +44,18 @@ const saveTemplate = async () => {
         const response = await planServices.addplan(body);
         const planId = response.data.id;
 
-        // Update each selected major with the new planId
+        editFpStore.selectedTemplate = { id: planId, title: templateTitle.value };
+
         for (const majorId of selectedMajors.value) {
             await majorServices.update(majorId, { planId: planId });
         }
 
-        editFpStore.getPlans();
+        await editFpStore.getPlans();
+
         editFpStore.showOverlay = false;
     } catch (error) {
         console.error("Failed to save template:", error);
     }
 };
-
-
 </script>
 <style scoped></style>

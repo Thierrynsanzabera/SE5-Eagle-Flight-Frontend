@@ -19,7 +19,7 @@
                     </v-col>
                 </v-row>
                 <v-textarea v-model="task.description" label="Description" variant="outlined" density="compact"
-                    auto-grow="true" rows=2></v-textarea>
+                    :autoGrow="true" rows=2></v-textarea>
             </v-container>
         </v-card>
         <v-row class="d-flex justify-center mt-0">
@@ -32,6 +32,9 @@
 import taskServices from '@/services/eagle-flight/taskServices'
 import { ref, computed, watch } from 'vue'
 import { useTaskStore } from '@/store/taskStore'
+import { useEditFpStore } from '@/store/editFpStore'
+
+const editFpStore = useEditFpStore()
 
 const taskStore = useTaskStore();
 
@@ -74,6 +77,10 @@ function cancelAction() {
 async function addTask() {
     await taskServices.addTask(task.value)
     await taskStore.getTasks()
+    if (editFpStore.currentPlan?.id) {
+        await editFpStore.getPlan(editFpStore.currentPlan.id)
+        await editFpStore.populateSemesters()
+    }
     cancelAction()
 }
 

@@ -13,10 +13,12 @@
       >
         <template #item.progress="{ item }">
           <v-progress-linear
-            :value="item.progress"
-            color="green"
+            :model-value="item.progress"
             height="20"
-            striped
+            rounded
+            :rounded-bar="true"
+            bg-color="white"
+            color="green"
             style="min-width: 200px;"
           >
             <template #default>

@@ -4,6 +4,7 @@ import majorServices from '@/services/eagle-flight/majorServices'
 import planServices from '@/services/eagle-flight/planServices';
 import taskServices from '@/services/eagle-flight/taskServices';
 import { watch } from 'vue';
+import instanceTaskServices from '@/services/eagle-flight/instanceTask.services';
 
 export const useEditFpStore = defineStore('editFpStore', () => {
     const expandedComboOpen = ref(false)
@@ -23,7 +24,6 @@ export const useEditFpStore = defineStore('editFpStore', () => {
 
     getPlans()
 
-    // for testing purposes. In the future we might want to call it when needed
     getTasks()
 
     function clearSemesters() {
@@ -109,23 +109,24 @@ export const useEditFpStore = defineStore('editFpStore', () => {
             return response.data
         } catch (error) {
             console.log(error)
-            return [] // or throw error if you want to handle it elsewhere
+            return []
         }
     }
 
-    // plans here = templates
-    function getPlans() {
-        planServices.getAll().then((response) => {
+    async function getPlans() {
+        try {
+            const response = await planServices.getAll()
             templateList.value = response.data
-        }).catch((error) => {
+        } catch (error) {
             console.log(error)
-        })
+        }
     }
 
     async function saveData() {
         let canContinue = false;
 
         try {
+            console.log("🗑 Deleting all tasks for plan:", currentPlan.value?.id);
             const res = await planServices.deleteAllInPlan(currentPlan.value.id);
             if (res.status === 200) {
                 canContinue = true;
@@ -138,19 +139,32 @@ export const useEditFpStore = defineStore('editFpStore', () => {
                 console.error("Unexpected error deleting tasks:", error);
             }
         }
+
         if (canContinue) {
+            console.log("➕ Re-adding all plan tasks...");
             for (let year = 0; year < 4; year++) {
                 for (let semester = 0; semester < 2; semester++) {
-                    const semesterArray = currentPlanTasks.value[year][semester]
+                    const semesterArray = currentPlanTasks.value[year][semester];
                     for (const task of semesterArray) {
-                        let semesterUntilGraduation = (8 - 2 * (year) - semester)
-                        let body = {
+                        const semesterUntilGraduation = 8 - 2 * year - semester;
+                        const body = {
                             taskId: task.id,
-                            semesterUntilGraduation: semesterUntilGraduation
-                        }
-                        await planServices.addTask(currentPlan.value.id, body)
+                            semesterUntilGraduation
+                        };
+                        console.log(`Adding task ${task.id} with SUG ${semesterUntilGraduation}`);
+                        await planServices.addTask(currentPlan.value.id, body);
                     }
                 }
+            }
+
+            try {
+                const planId = currentPlan.value?.id;
+                console.log("🔁 Syncing instanceTasks for planId:", planId);
+                const syncResult = await instanceTaskServices.syncForPlan(planId);
+                console.log("Sync successful:", syncResult.data?.message || syncResult.status);
+                showSaveOverlay.value = true;
+            } catch (syncError) {
+                console.error("Failed to sync instanceTasks:", syncError?.response?.data || syncError);
             }
         }
     }
@@ -167,5 +181,5 @@ export const useEditFpStore = defineStore('editFpStore', () => {
         })
     }
 
-    return { expandedComboOpen, showDeleteOverlay, showSaveOverlay,semesterNumber, taskList, currentPlanTasks, yearNumber, currentPlan, showOverlay, templateList, availableTasks, selectedTemplate, pushToCurrentPlanTasks, clearSemesters, getSemesterUntilGraduation, getMajors, setAvailableTasks, saveData, deletePlan, getPlans };
+    return { expandedComboOpen, showDeleteOverlay, showSaveOverlay,semesterNumber, taskList, currentPlanTasks, yearNumber, currentPlan, showOverlay, templateList, availableTasks, selectedTemplate, pushToCurrentPlanTasks, clearSemesters, getSemesterUntilGraduation, getMajors, setAvailableTasks, saveData, deletePlan, getPlan, getPlans };
 });

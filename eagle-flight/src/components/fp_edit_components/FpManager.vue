@@ -1,13 +1,20 @@
 <template>
     <v-card color="secondary" height="470px" width="1400px">
         <v-container max-width="94%" class="px-0">
-            <v-card-title class="pb-0 mb-3 text-center">
-                <v-title class="text-h4">Flight Plan Template Edit</v-title>
+            <v-card-title class="pb-0 mb-3 text-center text-h4">
+                Flight Plan Template Edit
             </v-card-title>
+
             <v-row>
                 <v-col cols="6" class="py-0">
-                    <v-select label="Template" :items="templates" v-model="editFpStore.selectedTemplate"
-                        item-title="title" variant="underlined" return-object="true"></v-select>
+                    <v-select
+                        label="Template"
+                        :items="templates"
+                        v-model="editFpStore.selectedTemplate"
+                        item-title="title"
+                        variant="underlined"
+                        :return-object="true"
+                    />
                 </v-col>
                 <v-col cols="2">
                     <v-btn color="background" variant="flat" rounded="pill" @click="editFpStore.showOverlay = true">
@@ -15,6 +22,7 @@
                     </v-btn>
                 </v-col>
             </v-row>
+
             <div v-show="editFpStore.selectedTemplate">
                 <v-row>
                     <v-col cols="3" class="d-flex justify-center">
@@ -30,10 +38,19 @@
                         <YearIcon :yearNumber="4" />
                     </v-col>
                 </v-row>
+
                 <v-row>
                     <v-col cols="6">
-                        <v-select chips multiple label="Target Majors" :items="majors" item-title="name" item-value="id"
-                            variant="outlined" v-model="selectedMajors"></v-select>
+                        <v-select
+                            chips
+                            multiple
+                            label="Target Majors"
+                            :items="majors"
+                            item-title="name"
+                            item-value="id"
+                            variant="outlined"
+                            v-model="selectedMajors"
+                        />
                     </v-col>
                     <v-col cols="6" class="d-flex align-center">
                         <v-row class="d-flex justify-end">
@@ -54,10 +71,9 @@
                 </v-row>
             </div>
         </v-container>
-
     </v-card>
-
 </template>
+
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import { useEditFpStore } from '@/store/editFpStore'
@@ -87,11 +103,11 @@ onMounted(async () => {
                 selectedMajors.value = majors.value
                     .filter(major => major.planId === currentPlanId.value)
                     .map(major => major.id)
-                selectedMajorsCopy.value = [...selectedMajors.value] // Make a reactive copy
+                selectedMajorsCopy.value = [...selectedMajors.value]
 
             }
         },
-        { immediate: true } // Runs immediately in case it's already there
+        { immediate: true }
     )
 })
 
@@ -119,12 +135,9 @@ async function saveData() {
     }
 }
 
-
 function cancelEdit() {
     editFpStore.selectedTemplate.value = null
     editFpStore.clearSemesters()
 }
-
-
 </script>
 <style scoped></style>
