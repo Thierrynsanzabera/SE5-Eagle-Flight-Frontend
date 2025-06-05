@@ -46,7 +46,8 @@ const pagesAdmin = [
   { name: "Manage Users", path: "manage-users" },
   { name: "Manage Majors", path: "manage-majors" },
   { name: "Manage Badges", path: "manage-badges" },
-  { name: "Manage Roles", path: "manage-roles"}
+  { name: "Manage Roles", path: "manage-roles"},
+  { name: "View Students", path: "view-students-fpp"}
 ];
 
 const pagesStudent = [
@@ -56,7 +57,8 @@ const pagesStudent = [
   { name: "Resume Builder", path: "" },
   { name: "Events", path: "events" },
   { name: "Manage Badges", path: "manage-badges" },
-  { name: "Manage Majors", path: "manage-majors" }
+  { name: "Manage Majors", path: "manage-majors" },
+  { name: "View Students", path: "view-students-fpp"}
 ];
 
 const displayedPages = computed(() => (isAdmin.value ? pagesAdmin : pagesStudent));

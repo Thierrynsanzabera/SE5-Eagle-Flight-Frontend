@@ -4,24 +4,27 @@
         <ExpandedEventsCombo />
     </v-overlay>
 
-    <v-container>
+    <v-container fluid>
         <v-switch
-        v-model="showAdminView"
-        label="Admin View"
-        inset
-        hide-details
-        class="d-flex justify-center align-center"
+            v-model="showAdminView"
+            label="Admin View"
+            inset
+            hide-details
+            class="d-flex justify-center"
         />
-        <div class="d-flex" v-if="showAdminView">
-                <div class="width justify-left" v-if="selectedEvent">
-                    <EventStudents :event-id="selectedEvent.id" />
-                </div>
-            <EventList @event-selected="passToEdit" class="mx-3 width justify-center" />
+        <div v-if="showAdminView" class="admin-layout">
+            <div v-if="selectedEvent" class="students-panel">
+            <EventStudents :event-id="selectedEvent.id" />
+            </div>
+            <div class="events-wrapper">
+            <EventList @event-selected="passToEdit" />
+            </div>
         </div>
         <div v-else>
             <StudentEventCalendar />
         </div>
     </v-container>
+
 
 </template>
 
@@ -46,8 +49,23 @@ function passToEdit(event) {
 </script>
 
 <style>
-.width{
-    width: 400px;
-    max-width: 400px;
+.admin-layout {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.students-panel {
+  width: 500px;
+  max-width: 500px;
+  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+}
+
+.events-wrapper {
+  width: 600px;
+  max-width: 600px;
 }
 </style>
